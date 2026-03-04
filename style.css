@@ -16,4 +16,26 @@ body {
     @keyframes float {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-20px); }
-    }
+    }<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi página con imagen</title>
+</head>
+<body>
+
+    <h1>Hola Miguel!</h1>
+    
+    <p>Esta es una imagen de ejemplo:</p>
+    
+    <img src="https://images.unsplash.com/photo-1615751072497-5f5169febe17" 
+         alt="Perro adorable mirando a la cámara" 
+         width="500" 
+         loading="lazy">
+
+    <p>La imagen se carga de forma diferida (loading="lazy") para que la página sea más rápida.</p>
+
+</body>
+</html>
+Atributos más útiles para <img>
