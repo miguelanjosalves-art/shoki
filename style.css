@@ -5,8 +5,6 @@ body {
         justify-content: center;
         align-items: center;
         background: linear-gradient(135deg, #667eea, #764ba2);
-        font-family: system-ui, sans-serif;
-        color: white;
     }
     h1 {
         font-size: 5rem;
