@@ -1,25 +1,39 @@
-<style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            height: 100vh;
-            background: #0d001a;
-            display: grid;
-            place-items: center;
-            font-family: 'Courier New', monospace;
-        }
-        h1 {
-            font-size: 7vw;
-            color: #00ffea;
-            text-shadow: 
-                0 0 5px  #00ffea,
-                0 0 10px #00ffea,
-                0 0 20px #00ffea,
-                0 0 40px #ff00aa,
-                0 0 80px #ff00aa;
-            animation: flicker 3s infinite alternate;
-        }
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: ... (mesmo de cima) }
-            20%, 24%, 55% { text-shadow: none; }
-        }
-    </style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background: #0d001a;
+    display: grid;
+    place-items: center;
+    font-family: 'Courier New', monospace;
+}
+
+h1 {
+    font-size: 7vw;
+    color: #00ffea;
+    text-shadow:
+        0 0 5px   #00ffea,
+        0 0 10px  #00ffea,
+        0 0 20px  #00ffea,
+        0 0 40px  #ff00aa,
+        0 0 80px  #ff00aa;
+    animation: flicker 3s infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow:
+            0 0 5px   #00ffea,
+            0 0 10px  #00ffea,
+            0 0 20px  #00ffea,
+            0 0 40px  #ff00aa,
+            0 0 80px  #ff00aa;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+    }
+}
