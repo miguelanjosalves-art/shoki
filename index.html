@@ -3,120 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Image Resizer - Gato Fofo</title>
-  
+  <title>Olá Mundo + Gatinho</title>
   
 </head>
 <body>
 
-  <div class="container">
-    <h1>ola mundo</h1>
-    
-    <div class="upload-area" id="uploadArea">
-      <p>Clique aqui ou arraste outra imagem (se quiser mudar o gato)</p>
-      <input type="file" id="imageInput" accept="image/*">
-    </div>
+  <h1>Olá Mundo!</h1>
 
-    <img id="preview" src="https://images.pexels.com/photos/1056251/pexels-photo-1056251.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Gato fofo dormindo">
-
-    <div class="controls" id="controls">
-      <label for="scale">Tamanho (%): <span id="percent">100</span>%</label>
-      <input type="range" id="scale" min="10" max="200" value="100" step="5">
-
-      <div class="size-info">
-        Dimensões: <span id="dimensions">— × —</span> px
-      </div>
-
-      <button id="downloadBtn">Baixar Gato Redimensionado 😺</button>
-    </div>
+  <div class="cat-container">
+    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" 
+         alt="Gatinho fofo olhando pra câmera">
+    <p>Que tal começar o dia com um gatinho? 😺</p>
   </div>
-
-  <script>
-    const imageInput = document.getElementById('imageInput');
-    const preview = document.getElementById('preview');
-    const scaleSlider = document.getElementById('scale');
-    const percentDisplay = document.getElementById('percent');
-    const dimensionsDisplay = document.getElementById('dimensions');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const controls = document.getElementById('controls');
-    const uploadArea = document.getElementById('uploadArea');
-
-    let originalImage = null;
-    let currentScale = 1;
-
-    // Carrega a imagem do gato por padrão
-    function loadDefaultImage() {
-      const defaultSrc = preview.src;
-      originalImage = new Image();
-      originalImage.crossOrigin = "anonymous"; // para permitir canvas
-      originalImage.onload = () => {
-        updatePreview();
-        controls.style.display = 'block';
-        scaleSlider.value = 100;
-        percentDisplay.textContent = 100;
-      };
-      originalImage.src = defaultSrc;
-    }
-
-    loadDefaultImage();
-
-    // Se o usuário subir outra imagem
-    imageInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-          preview.src = event.target.result;
-          originalImage = new Image();
-          originalImage.onload = () => {
-            updatePreview();
-            controls.style.display = 'block';
-            scaleSlider.value = 100;
-            percentDisplay.textContent = 100;
-          };
-          originalImage.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Atualiza ao mover o slider
-    scaleSlider.addEventListener('input', () => {
-      currentScale = scaleSlider.value / 100;
-      percentDisplay.textContent = scaleSlider.value;
-      updatePreview();
-    });
-
-    function updatePreview() {
-      if (!originalImage) return;
-
-      const newWidth = Math.round(originalImage.width * currentScale);
-      const newHeight = Math.round(originalImage.height * currentScale);
-
-      dimensionsDisplay.textContent = `${newWidth} × ${newHeight}`;
-
-      preview.style.width = newWidth + 'px';
-      preview.style.height = newHeight + 'px';
-    }
-
-    // Baixar imagem redimensionada
-    downloadBtn.addEventListener('click', () => {
-      if (!originalImage) return;
-
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.round(originalImage.width * currentScale);
-      canvas.height = Math.round(originalImage.height * currentScale);
-
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
-
-      const link = document.createElement('a');
-      link.download = 'gato-redimensionado.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    });
-  </script>
 
 </body>
 </html>
