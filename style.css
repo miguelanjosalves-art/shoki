@@ -36,7 +36,8 @@ h1 {
     20%, 24%, 55% {
         text-shadow: none;
     }
-}#chibi-img {
+    
+    }#chibi-img {
     display: block;                /* Centraliza melhor */
     margin: 40px auto 0;           /* Espaço acima (40px) e centraliza horizontal */
     width: 180px;                  /* Tamanho bom para chibi – ajuste se quiser maior/menor */
