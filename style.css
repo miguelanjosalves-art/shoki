@@ -36,4 +36,16 @@ h1 {
     20%, 24%, 55% {
         text-shadow: none;
     }
+}#chibi-img {
+    display: block;                /* Centraliza melhor */
+    margin: 40px auto 0;           /* Espaço acima (40px) e centraliza horizontal */
+    width: 180px;                  /* Tamanho bom para chibi – ajuste se quiser maior/menor */
+    height: auto;                  /* Mantém proporção */
+    border-radius: 20px;           /* Cantos arredondados fofos */
+    box-shadow: 0 0 20px rgba(0, 255, 234, 0.5);  /* Glow neon combinando com o tema */
+    transition: transform 0.3s;    /* Animação suave */
+}
+
+#chibi-img:hover {
+    transform: scale(1.15);        /* Aumenta um pouco ao passar o mouse */
 }
