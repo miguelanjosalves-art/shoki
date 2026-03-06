@@ -3,32 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá, Mundo! - Snowy Undertale</title>
+    <title>Olá, Mundo!🌨️</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Faz o player do YouTube ficar invisível */
+        #ytplayer {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+        }
+
+        /* Deixa o texto "Olá, Mundo!" parecer clicável */
+        h1 {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        h1:hover {
+            transform: scale(1.08);
+            text-shadow: 0 0 40px #00ffea, 0 0 80px #ff00aa;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="playTrigger">Olá, Mundo! 🌨️</h1>
+
+    <!-- Player do YouTube escondido - Snowy (Undertale) -->
+    <iframe 
+        id="ytplayer" 
+        src="https://www.youtube.com/embed/QZ1Jp-Wg7b0?autoplay=1&mute=1&loop=1&playlist=QZ1Jp-Wg7b0&rel=0&modestbranding=1&controls=0&showinfo=0&iv_load_policy=3" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+    </iframe>
+
+    <script>
+        // Pega os elementos
+        const trigger = document.getElementById('playTrigger');
+        const player = document.getElementById('ytplayer');
+
+        // Quando clicar no "Olá, Mundo!"
+        trigger.addEventListener('click', function() {
+            // Remove o mute (ativa o som)
+            let newSrc = player.src.replace('&mute=1', '');
+            player.src = newSrc;
+
+            // Mostra uma mensagem bonitinha (opcional)
+            const feedback = document.createElement('div');
+            feedback.textContent = '❄️ Snowy começou a tocar!';
+            feedback.style.position = 'fixed';
+            feedback.style.bottom = '30px';
+            feedback.style.left = '50%';
+            feedback.style.transform = 'translateX(-50%)';
+            feedback.style.background = 'rgba(0, 255, 234, 0.2)';
+            feedback.style.color = '#00ffea';
+            feedback.style.padding = '15px 30px';
+            feedback.style.borderRadius = '15px';
+            feedback.style.fontFamily = "'Courier New', monospace";
+            feedback.style.fontSize = '1.3rem';
+            feedback.style.backdropFilter = 'blur(5px)';
+            feedback.style.zIndex = '100';
+            document.body.appendChild(feedback);
+
+            // Some a mensagem depois de 4 segundos
+            setTimeout(() => feedback.remove(), 4000);
+        });
+    </script>
+</body>
+</html><html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olá, Mundo!</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Olá, Mundo! 🌨️</h1>
-
-    <audio id="bgMusic" autoplay loop muted>
-        <source src="snowy.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio.
-    </audio>
-
-    <script>
-        const music = document.getElementById('bgMusic');
-
-        // Garante que começa mudo e autoplay (quase sempre permitido)
-        music.muted = true;
-        music.volume = 0.4;
-
-        // No primeiro clique/touch na página → tira o mute e toca com som
-        document.body.addEventListener('click', function enableSound() {
-            music.muted = false;
-            music.play().catch(() => {});
-            // Pode adicionar um texto sutil se quiser
-            // document.body.insertAdjacentHTML('beforeend', '<small style="position:fixed;bottom:10px;left:10px;color:#00ffea;">Música ativada! ❄️</small>');
-            document.body.removeEventListener('click', enableSound);
-        }, { once: true });
-    </script>
+    <h1>Olá, Mundo! 🌐</h1>
 </body>
 </html>
