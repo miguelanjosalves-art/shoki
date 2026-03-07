@@ -30,14 +30,13 @@
     <h1 id="playTrigger">Olá, Mundo! 🌨️</h1>
 <!-- Imagem que cai (escondida no início) -->
 <img id="fallingNoelle" 
-     src="https://br.pinterest.com/pin/21603273206732522/" 
+     src="https://i.redd.it/duf40w0n7b6a1.png" 
      alt="Noelle caindo"
      style="position: fixed; left: 50%; transform: translateX(-50%); top: -200px; width: 180px; pointer-events: none; opacity: 0; image-rendering: pixelated;">
 
 <!-- Áudio do som de queda/whoosh descendente (escondido) -->
 <audio id="fallSound" preload="auto">
-  <source src="https://www.youtube.com/shorts/4LEBdca7s-o" type="audio/mpeg">
-  
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-fast-whoosh-1489.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -74,11 +73,10 @@
 
         // Toca o som imediatamente (whoosh descendente)
         sound.currentTime = 0; // reseta para início
-        sound.volume = 0.6;
         sound.play().catch(err => console.log("Erro no play:", err)); // autoplay pode precisar de interação prévia
 
         // Anima descendo lentamente (8 segundos)
-        img.style.transition = 'top 7s linear';
+        img.style.transition = 'top 8s linear';
         img.style.top = '100vh';
 
         // Para o som e esconde tudo depois de ~8s
