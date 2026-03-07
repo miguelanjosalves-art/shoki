@@ -28,7 +28,74 @@
 </head>
 <body>
     <h1 id="playTrigger">Olá, Mundo! 🌨️</h1>
+<!-- Imagem que cai (escondida no início) -->
+<img id="fallingNoelle" 
+     src="https://i.pinimg.com/736x/14/f8/77/14f8778f9eade6cf83029e104b5414be.jpg" 
+     alt="Noelle caindo"
+     style="position: fixed; left: 50%; transform: translateX(-50%); top: -200px; width: 180px; pointer-events: none; opacity: 0; image-rendering: pixelated;">
 
+<!-- Áudio do som de queda/whoosh descendente (escondido) -->
+<audio id="fallSound" preload="auto">
+  <source src="https://www.myinstants.com/en/instant/moving-stone-4179" type="audio/mpeg">
+  Seu navegador não suporta áudio.
+</audio>
+
+<script>
+  // Sequência: cima cima baixo baixo cima cima baixo baixo A
+  const secretSequence = [
+    'ArrowUp', 'ArrowUp', 
+    'ArrowDown', 'ArrowDown', 
+    'ArrowUp', 'ArrowUp', 
+    'ArrowDown', 'ArrowDown', 
+    'a'
+  ];
+
+  let currentIndex = 0;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.repeat) return;
+
+    const pressedKey = e.key;
+
+    if (pressedKey === secretSequence[currentIndex] || 
+        pressedKey.toLowerCase() === secretSequence[currentIndex]) {
+      
+      currentIndex++;
+
+      if (currentIndex === secretSequence.length) {
+        const img = document.getElementById('fallingNoelle');
+        const sound = document.getElementById('fallSound');
+
+        // Reseta e mostra a imagem no topo
+        img.style.top = '-200px';
+        img.style.opacity = '1';
+        img.style.transition = 'none';
+        void img.offsetWidth; // força reset da animação
+
+        // Toca o som imediatamente (whoosh descendente)
+        sound.currentTime = 0; // reseta para início
+        sound.play().catch(err => console.log("Erro no play:", err)); // autoplay pode precisar de interação prévia
+
+        // Anima descendo lentamente (8 segundos)
+        img.style.transition = 'top 8s linear';
+        img.style.top = '100vh';
+
+        // Para o som e esconde tudo depois de ~8s
+        setTimeout(() => {
+          sound.pause();
+          sound.currentTime = 0;
+          img.style.opacity = '0';
+          currentIndex = 0; // permite repetir a sequência
+        }, 8500);
+
+        // Fundo opcional para efeito
+        document.body.style.background = 'linear-gradient(to bottom, #0a0015, #1a0033)';
+      }
+    } else {
+      currentIndex = 0; // reseta se errar
+    }
+  });
+</script>
     <!-- Filhote brincando com bolinha -->
  <a href="https://deltarune.wiki/" target="_blank">
   <img src="https://media1.tenor.com/m/pha-P64dDmIAAAAC/noelle-holiday.gif"
