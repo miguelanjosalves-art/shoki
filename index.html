@@ -74,10 +74,11 @@
 
         // Toca o som imediatamente (whoosh descendente)
         sound.currentTime = 0; // reseta para início
+        sound.volume = 0.6;
         sound.play().catch(err => console.log("Erro no play:", err)); // autoplay pode precisar de interação prévia
 
         // Anima descendo lentamente (8 segundos)
-        img.style.transition = 'top 8s linear';
+        img.style.transition = 'top 7s linear';
         img.style.top = '100vh';
 
         // Para o som e esconde tudo depois de ~8s
