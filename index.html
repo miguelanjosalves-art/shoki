@@ -40,6 +40,37 @@
 </audio>
 
 <script>
+  // NOVA SEQUÊNCIA: esquerda x direita z → abre vídeo do Sans dançando no YouTube
+  const ytSequence = ['ArrowLeft', 'x', 'ArrowRight', 'z'];
+  let ytKeysPressed = [];
+
+  // Adiciona ao event listener EXISTENTE (se já tiver o da Noelle) ou cria novo
+  document.addEventListener('keydown', (e) => {
+    if (e.repeat) return;
+
+    const key = e.key.toLowerCase();
+    ytKeysPressed.push(key);
+
+    // Mantém só as últimas teclas da sequência
+    if (ytKeysPressed.length > ytSequence.length) {
+      ytKeysPressed.shift();
+    }
+
+    // Verifica se completou a sequência
+    if (ytKeysPressed.join('') === ytSequence.join('')) {
+      // Abre o vídeo do Sans dançando em nova aba
+      window.open('https://www.youtube.com/watch?v=tZzWdKc6-lI&pp=ygUVbyB2aWFkbyBhcGVydG8gbyBwbGF5', '_blank');
+      
+      // Opcional: efeito visual
+      document.body.style.background = '#000';
+      document.title = 'Sans Dance ativado! 🕺💀';
+      
+      ytKeysPressed = []; // reseta pra usar de novo
+    }
+  });
+</script>
+
+<script>
   // Sequência: cima cima baixo baixo cima cima baixo baixo A
   const secretSequence = [
     'ArrowUp', 'ArrowUp', 
