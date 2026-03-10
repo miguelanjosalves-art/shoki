@@ -22,13 +22,31 @@
     }
 
     .container {
-      position: absolute;
-      inset: 0;
+      position: relative;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: 80px; /* espaço entre as imagens e o centro */
+    }
+
+    .character {
+      width: 180px; /* tamanho das imagens - ajuste se quiser maior/menor */
+      height: auto;
+      filter: drop-shadow(0 0 12px rgba(255, 110, 240, 0.6));
+      animation: floatChar 7s ease-in-out infinite;
+    }
+
+    .left { transform: scaleX(1); }  /* Kris normal */
+    .right { transform: scaleX(-1); } /* Susie espelhada para "olhar" pro centro */
+
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
     }
 
     h1 {
@@ -42,7 +60,7 @@
         -6px -6px 0 #000,
         6px -6px 0 #000,
         -6px 6px 0 #000;
-      margin: 0;
+      margin: 0 0 30px 0;
       animation: glitch 4s infinite;
     }
 
@@ -51,6 +69,7 @@
       height: 80px;
       position: relative;
       animation: float 6s ease-in-out infinite;
+      margin: 0 auto 30px;
     }
 
     .heart::before,
@@ -92,6 +111,11 @@
       50%      { filter: hue-rotate(180deg); }
     }
 
+    @keyframes floatChar {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-20px) scale(1.03); }
+    }
+
     .soul {
       position: absolute;
       width: 32px;
@@ -115,14 +139,22 @@
 <body>
 
   <div class="container">
-    <h1>OLÁ MUNDO...?</h1>
-    
-    <div class="heart">♥</div>
-    
-    <div class="subtitle">
-      ( aperte Z ou ENTER para continuar )
+    <!-- Esquerda: Kris olhando para a direita -->
+    <img src="https://www.pngfind.com/pngs/m/439-4393340_deltarune-undertale2-kris-freetoedit-cartoon-hd-png-download.png" 
+         alt="Kris Deltarune" class="character left">
+
+    <!-- Centro: texto + coração -->
+    <div class="center-text">
+      <h1>OLÁ MUNDO...?</h1>
+      <div class="heart">♥</div>
+      <div class="subtitle">
+        ( aperte Z ou ENTER para continuar )
+      </div>
     </div>
-    
+
+    <!-- Direita: Susie olhando para a esquerda (espelhada) -->
+    <img src="https://www.clipartmax.com/png/middle/471-4714920_deltarune-susie-delta-rune.png" 
+         alt="Susie Deltarune" class="character right">
   </div>
 
   <div class="soul"></div>
