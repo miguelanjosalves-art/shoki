@@ -3,181 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ola mundo</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #0d0a1f;
-      color: #d8e8ff;
-      font-family: "Courier New", Courier, monospace;
-      min-height: 100vh;
-      background-image: 
-        radial-gradient(circle at 20% 30%, #1a0033 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, #003366 0%, transparent 30%);
-      overflow-x: hidden;
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 4.8rem;
-      text-align: center;
-      color: #00ffff;
-      text-shadow: 
-        0 0 10px #00ffff,
-        0 0 30px #00aaff,
-        0 0 60px #0000ff;
-      letter-spacing: 8px;
-      margin: 40px 0 60px;
-      animation: flicker 4s infinite alternate;
-    }
-
-    h2 {
-      color: #ff99ff;
-      text-align: center;
-      margin: 60px 0 30px;
-      font-size: 2.8rem;
-      text-shadow: 0 0 15px #ff66ff;
-    }
-
-    .soul {
-      width: 40px;
-      height: 40px;
-      background: #ff0000;
-      border: 4px solid #ffffff;
-      border-radius: 6px;
-      margin: 80px auto;
-      box-shadow: 
-        0 0 20px #ff3333,
-        inset 0 0 12px #ff6666;
-      animation: heartbeat 2s infinite;
-      cursor: pointer;
-    }
-
-    .text-box {
-      background: #0a001a;
-      border: 6px double #00ccff;
-      padding: 35px;
-      margin: 40px auto;
-      max-width: 720px;
-      font-size: 1.5rem;
-      line-height: 1.7;
-      box-shadow: 0 0 40px rgba(0, 200, 255, 0.25);
-      position: relative;
-    }
-
-    .text-box::before,
-    .text-box::after {
-      content: "★";
-      position: absolute;
-      color: #ffff66;
-      font-size: 1.8rem;
-      opacity: 0.7;
-    }
-
-    .text-box::before { top: -20px; left: 30px; }
-    .text-box::after  { bottom: -20px; right: 30px; }
-
-    .heart-trail {
-      position: fixed;
-      pointer-events: none;
-      z-index: 999;
-      width: 16px;
-      height: 16px;
-      background: #ff3366;
-      border-radius: 50%;
-      box-shadow: 0 0 12px #ff6699;
-      opacity: 0;
-      transform: scale(0);
-      transition: all 0.8s;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50%      { opacity: 0.92; }
-      70%      { opacity: 0.97; }
-    }
-
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.15); }
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 3.5rem; letter-spacing: 4px; }
-      h2 { font-size: 2.2rem; }
-      .text-box { font-size: 1.3rem; padding: 25px; }
-    }
-  </style>
+  <title>OLÁ MUNDO...?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  
 </head>
 <body>
 
   <div class="container">
-    <h1>Δ DELTARUNE Δ</h1>
-
-    <div class="text-box">
-      I can't go to Hometown...<br>
-      I can't go back to the Light World...<br><br>
-      
-      <span style="color:#ffcc00;">But maybe...</span><br>
-      <span style="color:#00ffcc;">Just maybe...</span><br><br>
-      
-      If I keep going forward...<br>
-      There'll be an answer somewhere.
+    <h1>OLÁ MUNDO...?</h1>
+    
+    <div class="heart">♥</div>
+    
+    <div class="subtitle">
+      ( aperte Z ou ENTER para continuar )
     </div>
-
-    <div class="soul" onclick="createHeartTrail(event)"></div>
-
-    <h2>CHAPTER 2 — CYBER CITY</h2>
-
-    <div class="text-box" style="text-align:center;">
-      ARE WE STILL<br>
-      <span style="color:#ff66ff; font-size:2.2rem;">PLAYING THE GAME?</span>
-    </div>
-
+    
   </div>
 
-  <script>
-    function createHeartTrail(e) {
-      const heart = document.createElement('div');
-      heart.className = 'heart-trail';
-      heart.style.left = e.clientX + 'px';
-      heart.style.top = e.clientY + 'px';
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.style.opacity = '0.9';
-        heart.style.transform = 'scale(1.8) translateY(-60px)';
-      }, 10);
-
-      setTimeout(() => {
-        heart.style.opacity = '0';
-        heart.style.transform = 'scale(0.2) translateY(-120px)';
-      }, 100);
-
-      setTimeout(() => heart.remove(), 1200);
-    }
-
-    // Clique duplo muda a cor da soul (só pra brincar)
-    let clickCount = 0;
-    document.querySelector('.soul').addEventListener('dblclick', () => {
-      clickCount++;
-      const soul = document.querySelector('.soul');
-      if (clickCount % 3 === 1) soul.style.background = '#00ffff';
-      if (clickCount % 3 === 2) soul.style.background = '#ffff00';
-      if (clickCount % 3 === 0) soul.style.background = '#ff0000';
-    });
-  </script>
+  <div class="soul"></div>
 
 </body>
 

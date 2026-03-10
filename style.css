@@ -1,11 +1,4 @@
-/* ==========================================================================
-   DELTARUNE CSS Theme — Dialog / Battle / Menu Style
-   ========================================================================== */
 
-/* Import da fonte pixelada (muito próxima da usada no jogo) */
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
-/* Reset básico */
 * {
   margin: 0;
   padding: 0;
