@@ -1,186 +1,184 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá, Mundo!🌨️</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Faz o player do YouTube ficar invisível */
-        #ytplayer {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-            width: 1px;
-            height: 1px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ola mundo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        /* Deixa o texto "Olá, Mundo!" parecer clicável */
-        h1 {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        h1:hover {
-            transform: scale(1.08);
-            text-shadow: 0 0 40px #00ffea, 0 0 80px #ff00aa;
-        }
-    </style>
+    body {
+      background: #0d0a1f;
+      color: #d8e8ff;
+      font-family: "Courier New", Courier, monospace;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 20% 30%, #1a0033 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, #003366 0%, transparent 30%);
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 4.8rem;
+      text-align: center;
+      color: #00ffff;
+      text-shadow: 
+        0 0 10px #00ffff,
+        0 0 30px #00aaff,
+        0 0 60px #0000ff;
+      letter-spacing: 8px;
+      margin: 40px 0 60px;
+      animation: flicker 4s infinite alternate;
+    }
+
+    h2 {
+      color: #ff99ff;
+      text-align: center;
+      margin: 60px 0 30px;
+      font-size: 2.8rem;
+      text-shadow: 0 0 15px #ff66ff;
+    }
+
+    .soul {
+      width: 40px;
+      height: 40px;
+      background: #ff0000;
+      border: 4px solid #ffffff;
+      border-radius: 6px;
+      margin: 80px auto;
+      box-shadow: 
+        0 0 20px #ff3333,
+        inset 0 0 12px #ff6666;
+      animation: heartbeat 2s infinite;
+      cursor: pointer;
+    }
+
+    .text-box {
+      background: #0a001a;
+      border: 6px double #00ccff;
+      padding: 35px;
+      margin: 40px auto;
+      max-width: 720px;
+      font-size: 1.5rem;
+      line-height: 1.7;
+      box-shadow: 0 0 40px rgba(0, 200, 255, 0.25);
+      position: relative;
+    }
+
+    .text-box::before,
+    .text-box::after {
+      content: "★";
+      position: absolute;
+      color: #ffff66;
+      font-size: 1.8rem;
+      opacity: 0.7;
+    }
+
+    .text-box::before { top: -20px; left: 30px; }
+    .text-box::after  { bottom: -20px; right: 30px; }
+
+    .heart-trail {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      width: 16px;
+      height: 16px;
+      background: #ff3366;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #ff6699;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.8s;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.92; }
+      70%      { opacity: 0.97; }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.15); }
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 3.5rem; letter-spacing: 4px; }
+      h2 { font-size: 2.2rem; }
+      .text-box { font-size: 1.3rem; padding: 25px; }
+    }
+  </style>
 </head>
 <body>
-    <h1 id="playTrigger">Olá, Mundo! 🌨️</h1>
-<!-- Imagem que cai (escondida no início) -->
-<img id="fallingNoelle" 
-     src="https://media1.tenor.com/m/WzWaEoFs9SgAAAAd/sea-lion-sea.gif" 
-     alt="Noelle caindo"
-     style="position: fixed; left: 50%; transform: translateX(-50%); top: -200px; width: 180px; pointer-events: none; opacity: 0; image-rendering: pixelated;">
 
-<!-- Áudio do som de queda/whoosh descendente (escondido) -->
-<audio id="fallSound" preload="auto">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-fast-whoosh-1489.mp3" type="audio/mpeg">
-</audio>
+  <div class="container">
+    <h1>Δ DELTARUNE Δ</h1>
 
-<script>
-  // NOVA SEQUÊNCIA: esquerda x direita z → abre vídeo do Sans dançando no YouTube
-  const ytSequence = ['ArrowLeft', 'x', 'ArrowRight', 'z'];
-  let ytKeysPressed = [];
+    <div class="text-box">
+      I can't go to Hometown...<br>
+      I can't go back to the Light World...<br><br>
+      
+      <span style="color:#ffcc00;">But maybe...</span><br>
+      <span style="color:#00ffcc;">Just maybe...</span><br><br>
+      
+      If I keep going forward...<br>
+      There'll be an answer somewhere.
+    </div>
 
-  // Adiciona ao event listener EXISTENTE (se já tiver o da Noelle) ou cria novo
-  document.addEventListener('keydown', (e) => {
-    if (e.repeat) return;
+    <div class="soul" onclick="createHeartTrail(event)"></div>
 
-    const key = e.key.toLowerCase();
-    ytKeysPressed.push(key);
+    <h2>CHAPTER 2 — CYBER CITY</h2>
 
-    // Mantém só as últimas teclas da sequência
-    if (ytKeysPressed.length > ytSequence.length) {
-      ytKeysPressed.shift();
+    <div class="text-box" style="text-align:center;">
+      ARE WE STILL<br>
+      <span style="color:#ff66ff; font-size:2.2rem;">PLAYING THE GAME?</span>
+    </div>
+
+  </div>
+
+  <script>
+    function createHeartTrail(e) {
+      const heart = document.createElement('div');
+      heart.className = 'heart-trail';
+      heart.style.left = e.clientX + 'px';
+      heart.style.top = e.clientY + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.style.opacity = '0.9';
+        heart.style.transform = 'scale(1.8) translateY(-60px)';
+      }, 10);
+
+      setTimeout(() => {
+        heart.style.opacity = '0';
+        heart.style.transform = 'scale(0.2) translateY(-120px)';
+      }, 100);
+
+      setTimeout(() => heart.remove(), 1200);
     }
 
-    // Verifica se completou a sequência
-    if (ytKeysPressed.join('') === ytSequence.join('')) {
-      // Abre o vídeo do Sans dançando em nova aba
-      window.open('https://www.youtube.com/watch?v=tZzWdKc6-lI&pp=ygUVbyB2aWFkbyBhcGVydG8gbyBwbGF5', '_blank');
-      
-      // Opcional: efeito visual
-      document.body.style.background = '#000';
-      document.title = 'Sans Dance ativado! 🕺💀';
-      
-      ytKeysPressed = []; // reseta pra usar de novo
-    }
-  });
-</script>
+    // Clique duplo muda a cor da soul (só pra brincar)
+    let clickCount = 0;
+    document.querySelector('.soul').addEventListener('dblclick', () => {
+      clickCount++;
+      const soul = document.querySelector('.soul');
+      if (clickCount % 3 === 1) soul.style.background = '#00ffff';
+      if (clickCount % 3 === 2) soul.style.background = '#ffff00';
+      if (clickCount % 3 === 0) soul.style.background = '#ff0000';
+    });
+  </script>
 
-<script>
-  // Sequência: cima cima baixo baixo cima cima baixo baixo A
-  const secretSequence = [
-    'ArrowUp', 'ArrowUp', 
-    'ArrowDown', 'ArrowDown', 
-    'ArrowUp', 'ArrowUp', 
-    'ArrowDown', 'ArrowDown', 
-    'a'
-  ];
-
-  let currentIndex = 0;
-
-  document.addEventListener('keydown', (e) => {
-    if (e.repeat) return;
-
-    const pressedKey = e.key;
-
-    if (pressedKey === secretSequence[currentIndex] || 
-        pressedKey.toLowerCase() === secretSequence[currentIndex]) {
-      
-      currentIndex++;
-
-      if (currentIndex === secretSequence.length) {
-        const img = document.getElementById('fallingNoelle');
-        const sound = document.getElementById('fallSound');
-
-        // Reseta e mostra a imagem no topo
-        img.style.top = '-200px';
-        img.style.opacity = '1';
-        img.style.transition = 'none';
-        void img.offsetWidth; // força reset da animação
-
-        // Toca o som imediatamente (whoosh descendente)
-        sound.currentTime = 0; // reseta para início
-        sound.play().catch(err => console.log("Erro no play:", err)); // autoplay pode precisar de interação prévia
-
-        // Anima descendo lentamente (8 segundos)
-        img.style.transition = 'top 8s linear';
-        img.style.top = '100vh';
-
-        // Para o som e esconde tudo depois de ~8s
-        setTimeout(() => {
-          sound.pause();
-          sound.currentTime = 0;
-          img.style.opacity = '0';
-          currentIndex = 0; // permite repetir a sequência
-        }, 8500);
-
-        // Fundo opcional para efeito
-        document.body.style.background = 'linear-gradient(to bottom, #0a0015, #1a0033)';
-      }
-    } else {
-      currentIndex = 0; // reseta se errar
-    }
-  });
-</script>
-    <!-- Filhote brincando com bolinha -->
- <a href="https://deltarune.wiki/" target="_blank">
-  <img src="https://media1.tenor.com/m/pha-P64dDmIAAAAC/noelle-holiday.gif"
-       alt="Clique na Noelle para ir à Wiki de Deltarune" 
-       style="max-width: 350px; border-radius: 15px; box-shadow: 0 8px 20px rgba(255,105,180,0.5);">
-</a>
-    
-    <!-- Player do YouTube escondido - Snowy (Undertale) -->
-    <iframe 
-        id="ytplayer" 
-        src="https://youtu.be/In3y0C7mQvA?list=PLwjEXrvFo-2B7iCX61eOThc_oGihi84l9autoplay=1&mute=1&loop=1&playlist=QZ1Jp-Wg7b0&rel=0&modestbranding=1&controls=0&showinfo=0&iv_load_policy=3" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-    </iframe>
-
-    <script>
-        // Pega os elementos
-        const trigger = document.getElementById('playTrigger');
-        const player = document.getElementById('ytplayer');
-
-        // Quando clicar no "Olá, Mundo!"
-        trigger.addEventListener('click', function() {
-            // Remove o mute (ativa o som)
-            let newSrc = player.src.replace('&mute=1', '');
-            player.src = newSrc;
-
-            // Mostra uma mensagem bonitinha (opcional)
-            const feedback = document.createElement('div');
-            feedback.textContent = '❄️ Snowy começou a tocar!';
-            feedback.style.position = 'fixed';
-            feedback.style.bottom = '30px';
-            feedback.style.left = '50%';
-            feedback.style.transform = 'translateX(-50%)';
-            feedback.style.background = 'rgba(0, 255, 234, 0.2)';
-            feedback.style.color = '#00ffea';
-            feedback.style.padding = '15px 30px';
-            feedback.style.borderRadius = '15px';
-            feedback.style.fontFamily = "'Courier New', monospace";
-            feedback.style.fontSize = '1.3rem';
-            feedback.style.backdropFilter = 'blur(5px)';
-            feedback.style.zIndex = '100';
-            document.body.appendChild(feedback);
-
-            // Some a mensagem depois de 4 segundos
-            setTimeout(() => feedback.remove(), 4000);
-        });
-    </script>
 </body>
-</html><html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá, Mundo!</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+
 </html>
