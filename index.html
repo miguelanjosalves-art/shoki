@@ -8,6 +8,109 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #0d0521;
+      background: linear-gradient(to bottom, #0f0829 0%, #1a0e3d 40%, #2a1352 100%);
+      color: #e0c8ff;
+      font-family: 'VT323', monospace;
+      font-size: 2.4rem;
+      overflow: hidden;
+      image-rendering: pixelated;
+    }
+
+    .container {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 3.8rem;
+      color: #fff8e8;
+      text-shadow: 
+        0 0 10px #ff6ef0,
+        0 0 20px #ff6ef0,
+        6px 6px 0 #000,
+        -6px -6px 0 #000,
+        6px -6px 0 #000,
+        -6px 6px 0 #000;
+      margin: 0;
+      animation: glitch 4s infinite;
+    }
+
+    .heart {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "♥";
+      position: absolute;
+      font-size: 80px;
+      color: #ff2d55;
+      text-shadow: 0 0 15px #ff477e;
+    }
+
+    .heart::after {
+      color: #ff6ef0;
+      animation: colorShift 8s infinite;
+    }
+
+    .subtitle {
+      font-size: 2.2rem;
+      color: #b19cd9;
+      text-shadow: 3px 3px 0 #000;
+      letter-spacing: 4px;
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      2%  { transform: translate(-2px, 2px); }
+      4%  { transform: translate(2px, -2px); }
+      6%  { transform: translate(-1px, 1px); }
+      20%, 80% { transform: translate(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-25px); }
+    }
+
+    @keyframes colorShift {
+      0%, 100% { filter: hue-rotate(0deg); }
+      50%      { filter: hue-rotate(180deg); }
+    }
+
+    .soul {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: #ffeb3b;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      box-shadow: 0 0 20px #ffeb3b, inset 0 0 12px #fff176;
+      animation: soulMove 12s infinite linear;
+      pointer-events: none;
+    }
+
+    @keyframes soulMove {
+      0%   { left: 10%; top: 80%; }
+      25%  { left: 80%; top: 70%; }
+      50%  { left: 60%; top: 20%; }
+      75%  { left: 20%; top: 30%; }
+      100% { left: 10%; top: 80%; }
+    }
+  </style>
 </head>
 <body>
 
