@@ -94,17 +94,21 @@
       margin-bottom: 20px;
     }
 
-    /* Estilo para a nova imagem clicável */
-    .clickable-img {
-      width: 80px; /* Ajuste o tamanho conforme necessário */
+    /* Estilo da Imagem Clicável */
+    .clickable-btn {
+      width: 80px; /* Ajuste o tamanho da imagem aqui */
       cursor: pointer;
       transition: transform 0.2s, filter 0.2s;
-      image-rendering: pixelated;
+      filter: drop-shadow(0 0 5px #fff);
     }
 
-    .clickable-img:hover {
-      transform: scale(1.1);
-      filter: brightness(1.2) drop-shadow(0 0 10px #ffeb3b);
+    .clickable-btn:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 15px #ffeb3b);
+    }
+
+    .clickable-btn:active {
+      transform: scale(0.9);
     }
 
     @keyframes glitch {
@@ -151,31 +155,39 @@
 </head>
 <body>
 
+  <audio id="click-sound" src="https://www.myinstants.com/media/sounds/deltarune-save.mp3"></audio>
+
   <div class="scene">
-   
+    
     <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" 
          alt="Kris" class="character left-char">
 
-    
-         <div class="center">
+    <div class="center">
       <h1>OLÁ MUNDO...?</h1>
       <div class="heart">♥</div>
       <div class="subtitle">
         (aperte Z ou ENTER para continuar)
       </div>
       
-      <a href="SUA_URL_AQUI">
-        <img src="https://utdr.wiki/images/thumb/e/e0/Save_Point.gif/120px-Save_Point.gif" 
-             alt="Ponto de Salvar" class="clickable-img">
-      </a>
+      <img src="https://utdr.wiki/static/images/deltarune/item/Save_Point.png" 
+           alt="Save" 
+           class="clickable-btn" 
+           onclick="playSound()">
     </div>
 
-   
     <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" 
          alt="Susie" class="character right-char">
   </div>
 
   <div class="soul"></div>
+
+  <script>
+    function playSound() {
+      const audio = document.getElementById('click-sound');
+      audio.currentTime = 0; // Reinicia o som se clicar várias vezes rápido
+      audio.play();
+    }
+  </script>
 
 </body>
 
