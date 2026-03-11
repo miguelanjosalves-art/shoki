@@ -10,182 +10,91 @@
   
   <style>
     body {
-      margin: 0;
-      height: 100vh;
-      background: #0d0521;
+      margin: 0; height: 100vh;
       background: linear-gradient(to bottom, #0f0829 0%, #1a0e3d 40%, #2a1352 100%);
-      color: #e0c8ff;
-      font-family: 'VT323', monospace;
-      font-size: 2.4rem;
-      overflow: hidden;
-      image-rendering: pixelated;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      color: #e0c8ff; font-family: 'VT323', monospace; font-size: 2.4rem;
+      overflow: hidden; image-rendering: pixelated;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .scene {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 1400px;
-      gap: 60px;
-    }
-
-    .character {
-      width: 160px;
-      height: auto;
-      filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7));
-      animation: floatChar 6s ease-in-out infinite;
-    }
-
+    .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
+    .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
     .left-char { transform: scaleX(1); }
     .right-char { transform: scaleX(-1); }
-
-    .center {
-      text-align: center;
-      position: relative;
-      z-index: 5;
-    }
+    .center { text-align: center; z-index: 5; }
 
     h1 {
-      font-family: 'Press Start 2P', cursive;
-      font-size: 4.2rem;
-      color: #fff8e8;
-      text-shadow: 
-        0 0 12px #ff6ef0,
-        0 0 24px #ff6ef0,
-        8px 8px 0 #000,
-        -8px -8px 0 #000,
-        8px -8px 0 #000,
-        -8px 8px 0 #000;
-      margin: 0 0 20px 0;
-      animation: glitch 5s infinite;
-      letter-spacing: 6px;
+      font-family: 'Press Start 2P', cursive; font-size: 4.2rem; color: #fff8e8;
+      text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000;
+      margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
-    .heart {
-      font-size: 90px;
-      margin: 10px auto;
-      position: relative;
-      width: 90px;
-      height: 90px;
-      animation: float 5s ease-in-out infinite;
-    }
-
-    .heart::before,
-    .heart::after {
-      content: "♥";
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    .heart::before { color: #ff2d55; text-shadow: 0 0 20px #ff477e; }
-    .heart::after  { color: #ff6ef0; animation: colorShift 10s infinite; }
-
-    .subtitle {
-      font-size: 2rem;
-      color: #b19cd9;
-      text-shadow: 4px 4px 0 #000;
-      letter-spacing: 3px;
-      margin-bottom: 20px;
-    }
+    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
+    .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
     /* Estilo da Imagem Clicável */
     .clickable-btn {
-      width: 80px; /* Ajuste o tamanho da imagem aqui */
-      cursor: pointer;
-      transition: transform 0.2s, filter 0.2s;
+      width: 80px; cursor: pointer; transition: transform 0.2s;
       filter: drop-shadow(0 0 5px #fff);
     }
+    .clickable-btn:hover { transform: scale(1.2); filter: drop-shadow(0 0 15px #ffeb3b); }
 
-    .clickable-btn:hover {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 15px #ffeb3b);
-    }
-
-    .clickable-btn:active {
-      transform: scale(0.9);
-    }
-
-    @keyframes glitch {
-      0%, 100% { transform: translate(0); }
-      2%, 4%   { transform: translate(-3px, 3px); }
-      6%       { transform: translate(3px, -3px); }
-      20%, 80% { transform: translate(0); }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-20px); }
-    }
-
-    @keyframes colorShift {
-      0%, 100% { filter: hue-rotate(0deg); }
-      50%      { filter: hue-rotate(200deg); }
-    }
-
-    @keyframes floatChar {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50%      { transform: translateY(-15px) scale(1.04); }
-    }
-
-    .soul {
+    /* ESCONDER O PLAYER DO YOUTUBE */
+    #yt-player {
       position: absolute;
-      width: 28px;
-      height: 28px;
-      background: #ffeb3b;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      box-shadow: 0 0 18px #ffeb3b;
-      animation: soulMove 15s infinite linear;
-      pointer-events: none;
+      width: 1px; height: 1px;
+      opacity: 0; pointer-events: none;
     }
 
-    @keyframes soulMove {
-      0%   { left: 5%; top: 85%; }
-      25%  { left: 85%; top: 75%; }
-      50%  { left: 65%; top: 15%; }
-      75%  { left: 15%; top: 25%; }
-      100% { left: 5%; top: 85%; }
-    }
+    @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
   </style>
 </head>
 <body>
 
-  <audio id="click-sound" src="https://youtu.be/VHo2mEg10zo"></audio>
+  <div id="yt-player"></div>
 
   <div class="scene">
-
-    <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" 
-         alt="Kris" class="character left-char">
+    <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character left-char">
 
     <div class="center">
       <h1>OLÁ MUNDO...?</h1>
       <div class="heart">♥</div>
-      <div class="subtitle">
-        (aperte Z ou ENTER para continuar)
-      </div>
+      <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
       
-      <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-           alt="Save" 
+      <img src="https://utdr.wiki/static/images/deltarune/item/Save_Point.png" 
            class="clickable-btn" 
-           onclick="playSound()">
+           onclick="playYoutubeAudio()">
     </div>
 
-    <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" 
-         alt="Susie" class="character right-char">
+    <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
   </div>
 
-  <div class="soul"></div>
-
+  <script src="https://youtu.be/VHo2mEg10zo"></script>
   <script>
-    function playSound() {
-      const audio = document.getElementById('https://youtu.be/VHo2mEg10zo');
-      audio.currentTime = 0; // Reinicia o som se clicar várias vezes rápido
-      audio.play();
+    let player;
+    
+    // ATENÇÃO: Troque as letras depois do "v=" pelo ID do seu vídeo!
+    const VIDEO_ID = 'VHo2mEg10zo'; 
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: VIDEO_ID,
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0
+        }
+      });
+    }
+
+    function playYoutubeAudio() {
+      if (player && player.playVideo) {
+        player.seekTo(0); // Recomeça o som do início
+        player.playVideo();
+      }
     }
   </script>
 
