@@ -29,35 +29,18 @@
       margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
-    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; position: relative; display: inline-block;}
+    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
-    /* Estilo do Ralsei Girando (Botão) */
     .ralsei-btn {
-      width: 100px; /* Tamanho do Ralsei */
-      cursor: pointer;
-      transition: transform 0.2s, filter 0.3s;
+      width: 100px; cursor: pointer; transition: transform 0.2s;
       filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
-      display: block;
-      margin: 0 auto;
+      display: block; margin: 0 auto;
     }
-    
-    .ralsei-btn:hover {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 20px rgba(100, 255, 100, 0.8));
-    }
-    
-    .ralsei-btn:active {
-      transform: scale(0.9);
-    }
+    .ralsei-btn:hover { transform: scale(1.2); filter: drop-shadow(0 0 20px rgba(100, 255, 100, 0.8)); }
 
-    /* ESCONDER O PLAYER DO YOUTUBE */
-    #yt-player {
-      position: absolute;
-      top: -1000px; left: -1000px;
-      width: 1px; height: 1px;
-      opacity: 0; pointer-events: none;
-    }
+    /* Escondendo os dois players lá longe */
+    .hidden-player { position: absolute; top: -5000px; left: -5000px; width: 1px; height: 1px; }
 
     @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
@@ -66,7 +49,8 @@
 </head>
 <body>
 
-  <div id="yt-player"></div>
+  <div id="yt-ralsei" class="hidden-player"></div>
+  <div id="yt-z" class="hidden-player"></div>
 
   <div class="scene">
     <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character left-char">
@@ -74,12 +58,11 @@
     <div class="center">
       <h1>OLÁ MUNDO...?</h1>
       <div class="heart">♥</div>
-      <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
+      <div class="subtitle">(aperte Z para Empty Town ou clique no Ralsei)</div>
       
       <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-           alt="Ralsei Spin" 
            class="ralsei-btn" 
-           onclick="playYoutubeAudio()">
+           onclick="playRalsei()">
     </div>
 
     <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
@@ -87,24 +70,51 @@
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    let player;
-    const VIDEO_ID = 'VHo2mEg10zo'; // ID da música "Once Upon a Time"
+    let playerRalsei;
+    let playerZ;
+
+    const ID_RALSEI = 'VHo2mEg10zo'; // Once Upon a Time
+    const ID_Z = 'In3y0C7mQvA';      // Empty Town
 
     function onYouTubeIframeAPIReady() {
-      player = new YT.Player('yt-player', {
-        height: '0', width: '0',
-        videoId: VIDEO_ID,
-        playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1 }
+      // Criando o player do Ralsei
+      playerRalsei = new YT.Player('yt-ralsei', {
+        height: '0', width: '0', videoId: ID_RALSEI,
+        playerVars: { 'autoplay': 0, 'controls': 0 }
+      });
+
+      // Criando o player da tecla Z (com Loop)
+      playerZ = new YT.Player('yt-z', {
+        height: '0', width: '0', videoId: ID_Z,
+        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': ID_Z },
+        events: {
+          'onStateChange': (e) => { if(e.data === YT.PlayerState.ENDED) playerZ.playVideo(); }
+        }
       });
     }
 
-    function playYoutubeAudio() {
-      if (player && player.playVideo) {
-        player.playVideo();
+    // Função disparada pelo clique no Ralsei
+    function playRalsei() {
+      if (playerRalsei && playerRalsei.playVideo) {
+        playerRalsei.seekTo(0); // Sempre começa do início ao clicar
+        playerRalsei.playVideo();
       }
     }
+
+    // Função disparada pela tecla Z
+    function playEmptyTown() {
+      if (playerZ && playerZ.playVideo) {
+        playerZ.playVideo();
+      }
+    }
+
+    // Ouvinte do Teclado
+    document.addEventListener('keydown', function(event) {
+      if (event.key.toLowerCase() === 'z') {
+        playEmptyTown();
+      }
+    });
   </script>
 
 </body>
-
 </html>
