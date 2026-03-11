@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER</title>
+  <title>DELTARUNE CLICKER - UPGRADE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -18,20 +18,14 @@
       user-select: none;
     }
 
-    /* SISTEMA DE TELAS: Garante que uma suma para a outra aparecer */
     .screen {
-      display: none; /* Esconde as telas por padrão */
-      width: 100%; height: 100%;
+      display: none; width: 100%; height: 100%;
       align-items: center; justify-content: center;
-      flex-direction: column;
-      position: absolute;
+      flex-direction: column; position: absolute;
     }
 
-    .screen.active {
-      display: flex; /* Só mostra a tela que tiver a classe 'active' */
-    }
+    .screen.active { display: flex; }
 
-    /* ESTILO DA CENA INICIAL (SEU LAYOUT) */
     .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
     .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
     .right-char { transform: scaleX(-1); }
@@ -46,19 +40,33 @@
     .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
-    /* ESTILO DO RALSEI E CLICKER */
     .ralsei-btn {
       width: 100px; cursor: pointer; transition: transform 0.1s;
       filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
     }
     
-    .click-target { width: 220px; } /* Ralsei maior na tela de jogo */
+    .click-target { width: 220px; }
 
-    /* CONTADOR DE KROMER */
     #kromer-display {
       font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
       color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
     }
+
+    /* ESTILO DO BOTÃO DE UPGRADE */
+    #upgrade-container {
+      margin-top: 20px;
+      display: none; /* Começa escondido */
+    }
+
+    .btn-upgrade {
+      background: #000; color: #00ff00; border: 4px solid #fff;
+      padding: 15px 30px; font-family: 'Press Start 2P', cursive;
+      font-size: 1.2rem; cursor: pointer;
+      box-shadow: 5px 5px 0 #00ff00;
+    }
+
+    .btn-upgrade:hover { background: #00ff00; color: #000; }
+    .btn-upgrade:active { transform: translateY(5px); box-shadow: 0 0 0 #000; }
 
     #yt-player { position: absolute; top: -1000px; }
 
@@ -88,50 +96,77 @@
     <div id="kromer-display">$ <span id="count">0</span></div>
     
     <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-         alt="Ralsei Click" 
+         id="ralsei-img"
          class="ralsei-btn click-target" 
          onclick="addKromer()">
          
-    <div class="subtitle" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
+    <div id="upgrade-container">
+        <button class="btn-upgrade" onclick="buyUpgrade()">
+            [[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)
+        </button>
+    </div>
+
+    <div class="subtitle" id="game-sub" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     let kromer = 0;
+    let clickValue = 1;
     let gameStarted = false;
-    let isKeyDown = false; // Trava para não ganhar pontos segurando a tecla
+    let isKeyDown = false;
 
-    // Ganhar ponto
+    // Efeito sonoro (Som de Seleção RPG)
+    const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
+    const upgradeSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+
     function addKromer() {
       if(!gameStarted) return;
-      kromer++;
+      
+      kromer += clickValue;
       document.getElementById('count').innerText = kromer;
       
-      // Feedback visual rápido no Ralsei
-      const ralsei = document.querySelector('.click-target');
+      // Tocar som de clique
+      clickSound.currentTime = 0;
+      clickSound.play();
+      
+      // Efeito visual
+      const ralsei = document.getElementById('ralsei-img');
       ralsei.style.transform = "scale(1.1)";
       setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
+
+      // Verificar se pode comprar upgrade (50 pontos)
+      if (kromer >= 50 && clickValue === 1) {
+        document.getElementById('upgrade-container').style.display = 'block';
+      }
     }
 
-    // Mudar de tela
+    function buyUpgrade() {
+        if (kromer >= 50) {
+            upgradeSound.play();
+            kromer = 0; // Reseta os pontos
+            clickValue = 2; // Agora ganha 2
+            document.getElementById('count').innerText = kromer;
+            document.getElementById('upgrade-container').style.display = 'none';
+            document.getElementById('game-sub').innerText = "VOCÊ É UM [[BIG SHOT]] AGORA!";
+        }
+    }
+
     function startTheGame() {
       if(gameStarted) return;
       gameStarted = true;
-      
       if (player && player.playVideo) { player.playVideo(); }
-
       document.getElementById('intro-screen').classList.remove('active');
       document.getElementById('game-screen').classList.add('active');
     }
 
-    // Teclado
     document.addEventListener('keydown', (event) => {
       const key = event.key.toUpperCase();
       if (key === 'Z' || key === 'ENTER') {
         if (!gameStarted) {
           startTheGame();
         } else {
-          if (!isKeyDown) { // Só ganha ponto se a tecla acabou de ser apertada
+          if (!isKeyDown) {
             addKromer();
             isKeyDown = true;
           }
@@ -141,12 +176,9 @@
 
     document.addEventListener('keyup', (event) => {
       const key = event.key.toUpperCase();
-      if (key === 'Z' || key === 'ENTER') {
-        isKeyDown = false; // Libera para apertar de novo
-      }
+      if (key === 'Z' || key === 'ENTER') isKeyDown = false;
     });
 
-    // Música do YouTube
     let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
