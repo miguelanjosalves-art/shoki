@@ -9,14 +9,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   
   <style>
+    /* 1. SEU ESTILO ORIGINAL + AJUSTES DE TELA */
     body {
       margin: 0; height: 100vh;
       background: linear-gradient(to bottom, #0f0829 0%, #1a0e3d 40%, #2a1352 100%);
       color: #e0c8ff; font-family: 'VT323', monospace; font-size: 2.4rem;
       overflow: hidden; image-rendering: pixelated;
       display: flex; align-items: center; justify-content: center;
+      user-select: none;
     }
 
+    /* SISTEMA DE TELAS */
+    .screen {
+      position: absolute; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+    }
+
+    #game-screen { 
+      opacity: 0; 
+      pointer-events: none; 
+      transform: scale(0.9); 
+      flex-direction: column; 
+    }
+
+    .active { opacity: 1 !important; pointer-events: all !important; transform: scale(1) !important; }
+
+    /* SEUS ESTILOS DE PERSONAGENS E TEXTO */
     .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
     .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
     .left-char { transform: scaleX(1); }
@@ -29,35 +48,25 @@
       margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
-    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; position: relative; display: inline-block;}
+    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; display: inline-block;}
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
-    /* Estilo do Ralsei Girando (Botão) */
     .ralsei-btn {
-      width: 100px; /* Tamanho do Ralsei */
-      cursor: pointer;
-      transition: transform 0.2s, filter 0.3s;
+      width: 100px; cursor: pointer; transition: transform 0.2s;
       filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
-      display: block;
-      margin: 0 auto;
+      display: block; margin: 0 auto;
     }
     
-    .ralsei-btn:hover {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 20px rgba(100, 255, 100, 0.8));
-    }
-    
-    .ralsei-btn:active {
-      transform: scale(0.9);
+    .ralsei-btn:hover { transform: scale(1.2); }
+    .ralsei-btn:active { transform: scale(0.9); }
+
+    /* NOVO: CONTADOR DE KROMER */
+    #kromer-display {
+      font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
+      color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
     }
 
-    /* ESCONDER O PLAYER DO YOUTUBE */
-    #yt-player {
-      position: absolute;
-      top: -1000px; left: -1000px;
-      width: 1px; height: 1px;
-      opacity: 0; pointer-events: none;
-    }
+    #yt-player { position: absolute; top: -1000px; opacity: 0; }
 
     @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
@@ -68,40 +77,84 @@
 
   <div id="yt-player"></div>
 
-  <div class="scene">
-    <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character left-char">
+  <div id="intro-screen" class="screen active">
+    <div class="scene">
+      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character left-char">
 
-    <div class="center">
-      <h1>OLÁ MUNDO...?</h1>
-      <div class="heart">♥</div>
-      <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
-      
-      <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-           alt="Ralsei Spin" 
-           class="ralsei-btn" 
-           onclick="playYoutubeAudio()">
+      <div class="center">
+        <h1>OLÁ MUNDO...?</h1>
+        <div class="heart">♥</div>
+        <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
+        
+        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
+             alt="Ralsei Spin" 
+             class="ralsei-btn" 
+             onclick="playYoutubeAudio()">
+      </div>
+
+      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
     </div>
+  </div>
 
-    <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
+  <div id="game-screen" class="screen">
+    <div id="kromer-display">$ <span id="count">0</span></div>
+    
+    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
+         alt="Ralsei Click" 
+         class="ralsei-btn" 
+         style="width: 200px;" 
+         onclick="addKromer()">
+         
+    <div class="subtitle" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    let player;
-    const VIDEO_ID = 'VHo2mEg10zo'; // ID da música "Once Upon a Time"
+    let kromer = 0;
+    let gameStarted = false;
 
+    // Função para ganhar Kromer
+    function addKromer() {
+      if(!gameStarted) return;
+      kromer++;
+      document.getElementById('count').innerText = kromer;
+    }
+
+    // Função para mudar do começo para o jogo
+    function startTheGame() {
+      if(gameStarted) return;
+      gameStarted = true;
+      
+      playYoutubeAudio(); // Começa a música
+
+      // Esconde a tela inicial e mostra a do jogo
+      document.getElementById('intro-screen').classList.remove('active');
+      document.getElementById('game-screen').classList.add('active');
+    }
+
+    // Comandos de teclado
+    document.addEventListener('keydown', (event) => {
+      const key = event.key.toUpperCase();
+      if (key === 'Z' || key === 'ENTER') {
+        if (!gameStarted) {
+          startTheGame();
+        } else {
+          addKromer();
+        }
+      }
+    });
+
+    // Lógica do YouTube
+    let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
-        height: '0', width: '0',
-        videoId: VIDEO_ID,
+        height: '0', width: '0', videoId: 'VHo2mEg10zo',
         playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1 }
       });
     }
 
     function playYoutubeAudio() {
-      if (player && player.playVideo) {
-        player.playVideo();
-      }
+      if (player && player.playVideo) { player.playVideo(); }
     }
   </script>
 
