@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE - BOSS CHALLENGE</title>
+  <title>DELTARUNE - BOSS CHALLENGE FINAL</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   
   <style>
@@ -19,6 +19,7 @@
     .screen { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; position: absolute; }
     .screen.active { display: flex; }
 
+    /* BOTÃO DO BOSS */
     #boss-trigger {
         position: absolute; top: 20px; right: 20px;
         background: #000; color: red; border: 4px solid red;
@@ -37,6 +38,7 @@
     .ralsei-btn { width: 220px; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 0 10px green); }
     .radiant-glow { animation: rainbowGlow 1s linear infinite; }
 
+    /* BOSS FIGHT */
     #boss-container { display: none; text-align: center; z-index: 100; }
     .enemy-boss { width: 300px; cursor: pointer; filter: drop-shadow(0 0 20px red); transition: transform 0.1s; }
     .enemy-boss:active { transform: scale(0.95); }
@@ -49,8 +51,8 @@
 
     #yt-player { position: absolute; top: -1000px; }
     @keyframes rainbowGlow { 0% { filter: hue-rotate(0deg) drop-shadow(0 0 20px white); } 100% { filter: hue-rotate(360deg) drop-shadow(0 0 20px white); } }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     .shake-screen { animation: shake 0.2s infinite; }
     @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
   </style>
@@ -99,6 +101,7 @@
     let kromer = 0, clickValue = 1, gameStarted = false, isKeyDown = false;
     let isRadiant = false, bossActive = false, ralseiHP = 100;
     let bossHP = 350; 
+    let bossDefeated = false; // Nova variável para controlar se o boss já foi vencido
     let bossTimer;
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
@@ -129,23 +132,25 @@
             kromer -= 50; clickValue = 2; upgradeSound.play();
         } else if (clickValue === 2 && kromer >= 200) {
             kromer -= 200; clickValue = 3; upgradeSound.play();
-            document.getElementById('ralsei-img').src = "https://media.tenor.com/T_O8XF69L3AAAAAj/ralsei-deltarune.gif";
-            document.getElementById('boss-trigger').style.display = 'block'; 
+            document.getElementById('ralsei-img').src = "https://tenor.com/pt-BR/view/ralsei-ralsei-spin-deltarune-ralsei-deltarune-deltarune-spin-gif-11824283398994423323";
+            // Só mostra o botão se o boss ainda não tiver sido derrotado
+            if(!bossDefeated) document.getElementById('boss-trigger').style.display = 'block'; 
         }
         document.getElementById('upgrade-btn').style.display = 'none';
         updateDisplay();
     }
 
     function startBossFight() {
-        if(bossActive) return;
+        if(bossActive || bossDefeated) return;
         bossActive = true;
         ralseiHP = 100;
         bossHP = 350; 
         document.getElementById('normal-game').style.display = 'none';
         document.getElementById('boss-container').style.display = 'block';
-        document.getElementById('boss-trigger').style.display = 'none';
+        document.getElementById('boss-trigger').style.display = 'none'; // Esconde durante a luta
         document.getElementById('main-body').classList.add('shake-screen');
         updateBossUI();
+        
         bossTimer = setInterval(() => {
             ralseiHP -= 10;
             if(ralseiHP <= 0) { ralseiHP = 0; endBoss(false, "VOCÊ FOI DERROTADO..."); }
@@ -162,7 +167,7 @@
         if(!bossActive) return;
         bossHP -= 10; 
         clickSound.currentTime = 0; clickSound.play();
-        if(bossHP <= 0) { bossHP = 0; endBoss(true, "VITÓRIA! RALSEI ESTÁ RADIANTE!", true); } // Alterado para dar o bônus
+        if(bossHP <= 0) { bossHP = 0; endBoss(true, "VITÓRIA! O MUNDO BRILHA!", true); }
         updateBossUI();
     }
 
@@ -175,15 +180,19 @@
         document.getElementById('boss-container').style.display = 'none';
         document.getElementById('main-body').classList.remove('shake-screen');
         document.getElementById('game-sub').innerText = msg;
-        document.getElementById('boss-trigger').style.display = 'block';
         
-        // Removemos a linha que dava 2000$ e agora sempre ativa o bônus em caso de win
-        if(win && spared) startRadiantBonus();
+        if(win) {
+            bossDefeated = true; // Marca como derrotado
+            document.getElementById('boss-trigger').style.display = 'none'; // Garante que o botão some para sempre
+            startRadiantBonus();
+        } else {
+            // Se perder, o botão volta para tentar de novo
+            document.getElementById('boss-trigger').style.display = 'block';
+        }
         updateDisplay();
     }
 
     function startRadiantBonus() {
-        if(isRadiant) return;
         isRadiant = true;
         document.getElementById('ralsei-img').classList.add('radiant-glow');
         setTimeout(() => {
