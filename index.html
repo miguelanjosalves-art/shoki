@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - RADIANT BONUS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>DELTARUNE - BOSS CHALLENGE</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   
   <style>
@@ -18,314 +16,174 @@
       user-select: none;
     }
 
-    .screen {
-      display: none; width: 100%; height: 100%;
-      align-items: center; justify-content: center;
-      flex-direction: column; position: absolute;
-    }
+    .screen { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; position: absolute; }
     .screen.active { display: flex; }
 
+    #boss-trigger {
+        position: absolute; top: 20px; right: 20px;
+        background: #000; color: red; border: 4px solid red;
+        font-family: 'Press Start 2P'; font-size: 1rem;
+        padding: 15px; cursor: pointer; display: none; z-index: 200;
+    }
+    #boss-trigger:hover { background: red; color: white; }
+
     .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
-    .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
-    .right-char { transform: scaleX(-1); }
+    .character { width: 160px; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
     .center { text-align: center; }
+    h1 { font-family: 'Press Start 2P'; font-size: 4rem; color: #fff; text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000; }
+    .heart { font-size: 80px; color: #ff2d55; animation: float 5s infinite; }
 
-    h1 {
-      font-family: 'Press Start 2P', cursive; font-size: 4.2rem; color: #fff8e8;
-      text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000;
-      margin: 0 0 20px 0; animation: glitch 5s infinite;
-    }
+    #kromer-display { font-family: 'Press Start 2P'; font-size: 3.5rem; color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px; }
+    .ralsei-btn { width: 220px; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 0 10px green); }
+    .radiant-glow { animation: rainbowGlow 1s linear infinite; }
 
-    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
-    .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
-
-    .ralsei-btn {
-      width: 100px; cursor: pointer; transition: transform 0.1s, filter 0.3s;
-      filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
-    }
+    #boss-container { display: none; text-align: center; z-index: 100; }
+    .enemy-boss { width: 300px; cursor: pointer; filter: drop-shadow(0 0 20px red); transition: transform 0.1s; }
+    .enemy-boss:active { transform: scale(0.95); }
     
-    .click-target { width: 220px; }
+    #hp-bar-container { width: 450px; height: 35px; border: 4px solid white; background: #000; margin: 10px auto; position: relative; }
+    #hp-fill { width: 100%; height: 100%; background: #00ff00; transition: width 0.3s; }
 
-    /* EFEITO DE BRILHO DO RALSEI (2x BONUS) */
-    .radiant-glow {
-        animation: rainbowGlow 1.5s linear infinite;
-        filter: drop-shadow(0 0 25px white) !important;
-    }
-
-    @keyframes rainbowGlow {
-        0% { filter: drop-shadow(0 0 20px red); }
-        20% { filter: drop-shadow(0 0 20px yellow); }
-        40% { filter: drop-shadow(0 0 20px green); }
-        60% { filter: drop-shadow(0 0 20px cyan); }
-        80% { filter: drop-shadow(0 0 20px blue); }
-        100% { filter: drop-shadow(0 0 20px magenta); }
-    }
-
-    #kromer-display {
-      font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
-      color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
-    }
-
-    #bonus-timer {
-        color: #00ff00; font-family: 'Press Start 2P', cursive;
-        font-size: 1.2rem; display: none; margin-bottom: 10px;
-    }
-
-    .btn-action {
-      background: #000; color: #fff; border: 4px solid #fff;
-      padding: 10px 20px; font-family: 'Press Start 2P', cursive;
-      font-size: 1rem; cursor: pointer; margin: 5px;
-    }
-
-    .btn-lutar { color: #ff2d55; border-color: #ff2d55; }
-    .btn-poupar { color: #ffff00; border-color: #ffff00; }
-    .btn-lutar:hover { background: #ff2d55; color: #000; }
-    .btn-poupar:hover { background: #ffff00; color: #000; }
-
-    #boss-container {
-        display: none; position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%); z-index: 100; text-align: center;
-    }
-    .boss-img { width: 280px; filter: drop-shadow(0 0 20px red); }
-    .shake { animation: shake 0.2s infinite; }
-
-    @keyframes shake {
-        0% { transform: translate(1px, 1px) rotate(0deg); }
-        20% { transform: translate(-3px, 0px) rotate(1deg); }
-        40% { transform: translate(3px, 2px) rotate(-1deg); }
-        100% { transform: translate(1px, -2px) rotate(-1deg); }
-    }
+    .btn-action { background: #000; color: #fff; border: 4px solid #fff; padding: 10px 20px; font-family: 'Press Start 2P'; cursor: pointer; margin: 10px; }
+    .btn-upgrade { color: #00ff00; border-color: #00ff00; display: none; margin-top: 20px; }
 
     #yt-player { position: absolute; top: -1000px; }
-    @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
+    @keyframes rainbowGlow { 0% { filter: hue-rotate(0deg) drop-shadow(0 0 20px white); } 100% { filter: hue-rotate(360deg) drop-shadow(0 0 20px white); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    .shake-screen { animation: shake 0.2s infinite; }
+    @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
   </style>
 </head>
 <body id="main-body">
 
   <div id="yt-player"></div>
+  <button id="boss-trigger" onclick="startBossFight()">[ BOSS ]</button>
 
   <div id="intro-screen" class="screen active">
     <div class="scene">
-      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character">
+      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
       <div class="center">
         <h1>OLÁ MUNDO...?</h1>
         <div class="heart">♥</div>
-        <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
-        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" class="ralsei-btn">
+        <div style="font-size: 1.5rem;">(Z OU ENTER PARA COMEÇAR)</div>
       </div>
-      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
+      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" class="character" style="transform: scaleX(-1);">
     </div>
   </div>
 
   <div id="game-screen" class="screen">
-    <div id="bonus-timer">BÔNUS 2X: <span id="time-left">15</span>s</div>
     <div id="kromer-display">$ <span id="count">0</span></div>
     
     <div id="normal-game">
-        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-             id="ralsei-img"
-             class="ralsei-btn click-target" 
-             onclick="addKromer()">
+        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" id="ralsei-img" class="ralsei-btn" onclick="addKromer()">
     </div>
 
     <div id="boss-container">
-        <h2 style="color: red; font-family: 'Press Start 2P';">[[SPAMTON APARECEU]]</h2>
-        <img src="https://media.tenor.com/970x1T6Nf60AAAAi/spamton-neo-spamton.gif" class="boss-img">
-        <p style="color: white; font-family: 'Press Start 2P'; font-size: 1rem;" id="boss-hp">HP: 30</p>
-        <div style="display: flex; justify-content: center;">
-            <button class="btn-action btn-lutar" onclick="hitBoss()">[LUTAR]</button>
-            <button class="btn-action btn-poupar" onclick="spareBoss()">[POUPAR]</button>
+        <h2 style="color: red; font-family: 'Press Start 2P';">[[ BOSS: SPAMTON NEO ]]</h2>
+        <div id="hp-bar-container">
+            <div id="hp-fill"></div>
+            <div style="position:absolute; width:100%; top:5px; font-family:'VT323'; font-size:1.8rem; color: white;">RALSEI HP</div>
         </div>
-    </div>
-         
-    <div id="upgrade-container">
-        <button id="upgrade-btn" class="btn-action btn-poupar" style="width: auto; height: auto;" onclick="buyUpgrade()">
-            [[UPGRADE]] - 50 KROMER
-        </button>
+        <img src="https://media.tenor.com/970x1T6Nf60AAAAi/spamton-neo-spamton.gif" class="enemy-boss" onclick="hitEnemy()">
+        <p id="boss-hp-text" style="font-family:'Press Start 2P'; font-size:1.2rem; color: #ff0000; margin: 10px;">SPAMTON HP: 350</p>
+        <button class="btn-action" style="color: yellow; border-color: yellow;" onclick="spareBoss()">[ POUPAR ]</button>
     </div>
 
-    <div class="subtitle" id="game-sub" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
+    <button id="upgrade-btn" class="btn-action btn-upgrade" onclick="buyUpgrade()"></button>
+    <div id="game-sub" style="margin-top: 20px; font-size: 1.8rem;">PEGUE TODO O [[KROMER]]!</div>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    let kromer = 0;
-    let clickValue = 1;
-    let gameStarted = false;
-    let isKeyDown = false;
-
-    // Lógica do Bônus 2x
-    let isRadiant = false;
-    let bonusTime = 0;
-    let bonusInterval;
-
-    // Lógica do Chefe
-    let lastClickTime = 0;
-    let clickStreak = 0;
-    let bossActive = false;
-    let bossHP = 30;
+    let kromer = 0, clickValue = 1, gameStarted = false, isKeyDown = false;
+    let isRadiant = false, bossActive = false, ralseiHP = 100;
+    let bossHP = 350; 
+    let bossTimer;
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
     const upgradeSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-    const bossAppearSound = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
 
     function addKromer() {
       if(!gameStarted || bossActive) return;
-      
-      let now = Date.now();
-      if (now - lastClickTime < 300) { clickStreak++; } 
-      else { clickStreak = 0; }
-      lastClickTime = now;
-
-      if (clickStreak > 5) { spawnBoss(); return; }
-
-      // Aplica o dobro se estiver brilhando
-      let finalValue = isRadiant ? (clickValue * 2) : clickValue;
-      
-      kromer += finalValue;
+      let val = isRadiant ? (clickValue * 2) : clickValue;
+      kromer += val;
       updateDisplay();
-      
-      clickSound.currentTime = 0;
-      clickSound.play();
-      
-      const ralsei = document.getElementById('ralsei-img');
-      ralsei.style.transform = "scale(1.1)";
-      setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
-
+      clickSound.currentTime = 0; clickSound.play();
       checkUpgrades();
     }
 
-    function updateDisplay() {
-        document.getElementById('count').innerText = kromer;
-    }
+    function updateDisplay() { document.getElementById('count').innerText = kromer; }
 
     function checkUpgrades() {
-      const container = document.getElementById('upgrade-container');
       const btn = document.getElementById('upgrade-btn');
       if (clickValue === 1 && kromer >= 50) {
-          container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)";
+          btn.style.display = 'block'; btn.innerHTML = "[[UPGRADE]] - 50$ (+2 PER CLICK)";
       } else if (clickValue === 2 && kromer >= 200) {
-          container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE SUPREMO]] - 200 KROMER <br> (+3 POR CLIQUE)";
+          btn.style.display = 'block'; btn.innerHTML = "[[UPGRADE SUPREMO]] - 200$ (+3 PER CLICK)";
       }
     }
 
     function buyUpgrade() {
-        const container = document.getElementById('upgrade-container');
         if (clickValue === 1 && kromer >= 50) {
-            upgradeSound.play();
-            kromer = 0; clickValue = 2; updateDisplay();
-            container.style.display = 'none';
+            kromer -= 50; clickValue = 2; upgradeSound.play();
         } else if (clickValue === 2 && kromer >= 200) {
-            upgradeSound.play();
-            kromer = 0; clickValue = 3; updateDisplay();
-            container.style.display = 'none';
+            kromer -= 200; clickValue = 3; upgradeSound.play();
             document.getElementById('ralsei-img').src = "https://media.tenor.com/T_O8XF69L3AAAAAj/ralsei-deltarune.gif";
+            document.getElementById('boss-trigger').style.display = 'block'; 
         }
-    }
-
-    function spawnBoss() {
-        bossActive = true;
-        bossHP = 30;
-        bossAppearSound.play();
-        document.getElementById('normal-game').style.display = 'none';
-        document.getElementById('boss-container').style.display = 'block';
-        document.getElementById('main-body').classList.add('shake');
-        document.getElementById('game-sub').innerText = "[[AGIR]] OU [[LUTAR]]?";
-    }
-
-    function hitBoss() {
-        bossHP--;
-        document.getElementById('boss-hp').innerText = "HP: " + bossHP;
-        clickSound.currentTime = 0;
-        clickSound.play();
-        if (bossHP <= 0) finishBoss(true);
-    }
-
-    function spareBoss() {
-        upgradeSound.play();
-        finishBoss(false);
-    }
-
-    function finishBoss(isVictory) {
-        bossActive = false;
-        document.getElementById('normal-game').style.display = 'block';
-        document.getElementById('boss-container').style.display = 'none';
-        document.getElementById('main-body').classList.remove('shake');
-        clickStreak = 0;
-
-        if (isVictory) {
-            kromer += 1000;
-            document.getElementById('game-sub').innerText = "VOCÊ DERROTOU O [[BIG SHOT]]! +1000 KROMER";
-        } else {
-            document.getElementById('game-sub').innerText = "SPAMTON FOI [[POUPADO]]. RALSEI ESTÁ RADIANTE!";
-            startRadiantBonus();
-        }
+        document.getElementById('upgrade-btn').style.display = 'none';
         updateDisplay();
     }
 
-    // MECÂNICA DO BRILHO (BÔNUS)
-    function startRadiantBonus() {
-        if (isRadiant) return; // Não reinicia se já estiver ativo
-        
-        isRadiant = true;
-        bonusTime = 15;
-        document.getElementById('ralsei-img').classList.add('radiant-glow');
-        document.getElementById('bonus-timer').style.display = 'block';
-        document.getElementById('time-left').innerText = bonusTime;
-
-        clearInterval(bonusInterval);
-        bonusInterval = setInterval(() => {
-            bonusTime--;
-            document.getElementById('time-left').innerText = bonusTime;
-            if (bonusTime <= 0) {
-                stopRadiantBonus();
-            }
+    function startBossFight() {
+        if(bossActive) return;
+        bossActive = true;
+        ralseiHP = 100;
+        bossHP = 350; 
+        document.getElementById('normal-game').style.display = 'none';
+        document.getElementById('boss-container').style.display = 'block';
+        document.getElementById('boss-trigger').style.display = 'none';
+        document.getElementById('main-body').classList.add('shake-screen');
+        updateBossUI();
+        bossTimer = setInterval(() => {
+            ralseiHP -= 10;
+            if(ralseiHP <= 0) { ralseiHP = 0; endBoss(false, "VOCÊ FOI DERROTADO..."); }
+            updateBossUI();
         }, 1000);
     }
 
-    function stopRadiantBonus() {
-        isRadiant = false;
-        clearInterval(bonusInterval);
-        document.getElementById('ralsei-img').classList.remove('radiant-glow');
-        document.getElementById('bonus-timer').style.display = 'none';
-        document.getElementById('game-sub').innerText = "O BRILHO SUMIU...";
+    function updateBossUI() {
+        document.getElementById('hp-fill').style.width = ralseiHP + "%";
+        document.getElementById('boss-hp-text').innerText = "SPAMTON HP: " + bossHP;
     }
 
-    function startTheGame() {
-      if(gameStarted) return;
-      gameStarted = true;
-      if (player && player.playVideo) { player.playVideo(); }
-      document.getElementById('intro-screen').style.display = 'none';
-      document.getElementById('game-screen').classList.add('active');
+    function hitEnemy() {
+        if(!bossActive) return;
+        bossHP -= 10; 
+        clickSound.currentTime = 0; clickSound.play();
+        if(bossHP <= 0) { bossHP = 0; endBoss(true, "VITÓRIA! +2000$ PARA O [[BIG SHOT]]"); }
+        updateBossUI();
     }
 
-    document.addEventListener('keydown', (event) => {
-      const key = event.key.toUpperCase();
-      if (key === 'Z' || key === 'ENTER') {
-        if (!gameStarted) startTheGame();
-        else if (bossActive) hitBoss();
-        else {
-          if (!isKeyDown) { addKromer(); isKeyDown = true; }
-        }
-      }
-    });
+    function spareBoss() { endBoss(true, "POUPADO! RALSEI ESTÁ RADIANTE!", true); }
 
-    document.addEventListener('keyup', (event) => {
-      const key = event.key.toUpperCase();
-      if (key === 'Z' || key === 'ENTER') isKeyDown = false;
-    });
-
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('yt-player', {
-        height: '0', width: '0', videoId: 'VHo2mEg10zo',
-        playerVars: { 'autoplay': 0, 'controls': 0 }
-      });
+    function endBoss(win, msg, spared = false) {
+        clearInterval(bossTimer);
+        bossActive = false;
+        document.getElementById('normal-game').style.display = 'block';
+        document.getElementById('boss-container').style.display = 'none';
+        document.getElementById('main-body').classList.remove('shake-screen');
+        document.getElementById('game-sub').innerText = msg;
+        document.getElementById('boss-trigger').style.display = 'block';
+        if(win && !spared) kromer += 2000;
+        if(spared) startRadiantBonus();
+        updateDisplay();
     }
-  </script>
-</body>
-</html>
+
+    function startRadiantBonus() {
+        isRadiant = true;
+        document.getElementById('ralsei-img').classList.add('radiant-glow');
+        setTimeout(() => {
+            isRadiant = false;
+            document.getElementById('ralsei-img').classList.remove('radiant-glow');
