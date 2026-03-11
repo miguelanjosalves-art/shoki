@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OLÁ MUNDO...?</title>
+  <title>DELTARUNE CLICKER</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   
   <style>
-    /* 1. SEU ESTILO ORIGINAL + AJUSTES DE TELA */
     body {
       margin: 0; height: 100vh;
       background: linear-gradient(to bottom, #0f0829 0%, #1a0e3d 40%, #2a1352 100%);
@@ -19,28 +18,24 @@
       user-select: none;
     }
 
-    /* SISTEMA DE TELAS */
+    /* SISTEMA DE TELAS: Garante que uma suma para a outra aparecer */
     .screen {
-      position: absolute; width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+      display: none; /* Esconde as telas por padrão */
+      width: 100%; height: 100%;
+      align-items: center; justify-content: center;
+      flex-direction: column;
+      position: absolute;
     }
 
-    #game-screen { 
-      opacity: 0; 
-      pointer-events: none; 
-      transform: scale(0.9); 
-      flex-direction: column; 
+    .screen.active {
+      display: flex; /* Só mostra a tela que tiver a classe 'active' */
     }
 
-    .active { opacity: 1 !important; pointer-events: all !important; transform: scale(1) !important; }
-
-    /* SEUS ESTILOS DE PERSONAGENS E TEXTO */
+    /* ESTILO DA CENA INICIAL (SEU LAYOUT) */
     .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
     .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
-    .left-char { transform: scaleX(1); }
     .right-char { transform: scaleX(-1); }
-    .center { text-align: center; z-index: 5; }
+    .center { text-align: center; }
 
     h1 {
       font-family: 'Press Start 2P', cursive; font-size: 4.2rem; color: #fff8e8;
@@ -48,25 +43,24 @@
       margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
-    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; display: inline-block;}
+    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
+    /* ESTILO DO RALSEI E CLICKER */
     .ralsei-btn {
-      width: 100px; cursor: pointer; transition: transform 0.2s;
+      width: 100px; cursor: pointer; transition: transform 0.1s;
       filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
-      display: block; margin: 0 auto;
     }
     
-    .ralsei-btn:hover { transform: scale(1.2); }
-    .ralsei-btn:active { transform: scale(0.9); }
+    .click-target { width: 220px; } /* Ralsei maior na tela de jogo */
 
-    /* NOVO: CONTADOR DE KROMER */
+    /* CONTADOR DE KROMER */
     #kromer-display {
       font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
       color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
     }
 
-    #yt-player { position: absolute; top: -1000px; opacity: 0; }
+    #yt-player { position: absolute; top: -1000px; }
 
     @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
@@ -79,19 +73,13 @@
 
   <div id="intro-screen" class="screen active">
     <div class="scene">
-      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character left-char">
-
+      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character">
       <div class="center">
         <h1>OLÁ MUNDO...?</h1>
         <div class="heart">♥</div>
         <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
-        
-        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-             alt="Ralsei Spin" 
-             class="ralsei-btn" 
-             onclick="playYoutubeAudio()">
+        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" class="ralsei-btn">
       </div>
-
       <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
     </div>
   </div>
@@ -101,8 +89,7 @@
     
     <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
          alt="Ralsei Click" 
-         class="ralsei-btn" 
-         style="width: 200px;" 
+         class="ralsei-btn click-target" 
          onclick="addKromer()">
          
     <div class="subtitle" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
@@ -112,51 +99,61 @@
   <script>
     let kromer = 0;
     let gameStarted = false;
+    let isKeyDown = false; // Trava para não ganhar pontos segurando a tecla
 
-    // Função para ganhar Kromer
+    // Ganhar ponto
     function addKromer() {
       if(!gameStarted) return;
       kromer++;
       document.getElementById('count').innerText = kromer;
+      
+      // Feedback visual rápido no Ralsei
+      const ralsei = document.querySelector('.click-target');
+      ralsei.style.transform = "scale(1.1)";
+      setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
     }
 
-    // Função para mudar do começo para o jogo
+    // Mudar de tela
     function startTheGame() {
       if(gameStarted) return;
       gameStarted = true;
       
-      playYoutubeAudio(); // Começa a música
+      if (player && player.playVideo) { player.playVideo(); }
 
-      // Esconde a tela inicial e mostra a do jogo
       document.getElementById('intro-screen').classList.remove('active');
       document.getElementById('game-screen').classList.add('active');
     }
 
-    // Comandos de teclado
+    // Teclado
     document.addEventListener('keydown', (event) => {
       const key = event.key.toUpperCase();
       if (key === 'Z' || key === 'ENTER') {
         if (!gameStarted) {
           startTheGame();
         } else {
-          addKromer();
+          if (!isKeyDown) { // Só ganha ponto se a tecla acabou de ser apertada
+            addKromer();
+            isKeyDown = true;
+          }
         }
       }
     });
 
-    // Lógica do YouTube
+    document.addEventListener('keyup', (event) => {
+      const key = event.key.toUpperCase();
+      if (key === 'Z' || key === 'ENTER') {
+        isKeyDown = false; // Libera para apertar de novo
+      }
+    });
+
+    // Música do YouTube
     let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
         height: '0', width: '0', videoId: 'VHo2mEg10zo',
-        playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1 }
+        playerVars: { 'autoplay': 0, 'controls': 0 }
       });
     }
-
-    function playYoutubeAudio() {
-      if (player && player.playVideo) { player.playVideo(); }
-    }
   </script>
-
 </body>
 </html>
