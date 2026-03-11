@@ -19,7 +19,6 @@
     .screen { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; position: absolute; }
     .screen.active { display: flex; }
 
-    /* BOTÃO DO BOSS */
     #boss-trigger {
         position: absolute; top: 20px; right: 20px;
         background: #000; color: red; border: 4px solid red;
@@ -36,9 +35,10 @@
 
     #kromer-display { font-family: 'Press Start 2P'; font-size: 3.5rem; color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px; }
     .ralsei-btn { width: 220px; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 0 10px green); }
+    
+    /* EFEITO RADIANTE */
     .radiant-glow { animation: rainbowGlow 1s linear infinite; }
 
-    /* BOSS FIGHT */
     #boss-container { display: none; text-align: center; z-index: 100; }
     .enemy-boss { width: 300px; cursor: pointer; filter: drop-shadow(0 0 20px red); transition: transform 0.1s; }
     .enemy-boss:active { transform: scale(0.95); }
@@ -101,7 +101,7 @@
     let kromer = 0, clickValue = 1, gameStarted = false, isKeyDown = false;
     let isRadiant = false, bossActive = false, ralseiHP = 100;
     let bossHP = 350; 
-    let bossDefeated = false; // Nova variável para controlar se o boss já foi vencido
+    let bossDefeated = false; 
     let bossTimer;
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
@@ -132,8 +132,10 @@
             kromer -= 50; clickValue = 2; upgradeSound.play();
         } else if (clickValue === 2 && kromer >= 200) {
             kromer -= 200; clickValue = 3; upgradeSound.play();
-            document.getElementById('ralsei-img').src = "https://tenor.com/pt-BR/view/ralsei-ralsei-spin-deltarune-ralsei-deltarune-deltarune-spin-gif-11824283398994423323";
-            // Só mostra o botão se o boss ainda não tiver sido derrotado
+            
+            // NOVO LINK DO RALSEI AQUI:
+            document.getElementById('ralsei-img').src = "https://media.tenor.com/y_vQ3uMREfIAAAAi/ralsei-ralsei-spin.gif";
+            
             if(!bossDefeated) document.getElementById('boss-trigger').style.display = 'block'; 
         }
         document.getElementById('upgrade-btn').style.display = 'none';
@@ -147,7 +149,7 @@
         bossHP = 350; 
         document.getElementById('normal-game').style.display = 'none';
         document.getElementById('boss-container').style.display = 'block';
-        document.getElementById('boss-trigger').style.display = 'none'; // Esconde durante a luta
+        document.getElementById('boss-trigger').style.display = 'none';
         document.getElementById('main-body').classList.add('shake-screen');
         updateBossUI();
         
@@ -182,17 +184,17 @@
         document.getElementById('game-sub').innerText = msg;
         
         if(win) {
-            bossDefeated = true; // Marca como derrotado
-            document.getElementById('boss-trigger').style.display = 'none'; // Garante que o botão some para sempre
+            bossDefeated = true; 
+            document.getElementById('boss-trigger').style.display = 'none'; 
             startRadiantBonus();
         } else {
-            // Se perder, o botão volta para tentar de novo
             document.getElementById('boss-trigger').style.display = 'block';
         }
         updateDisplay();
     }
 
     function startRadiantBonus() {
+        if(isRadiant) return;
         isRadiant = true;
         document.getElementById('ralsei-img').classList.add('radiant-glow');
         setTimeout(() => {
