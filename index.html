@@ -30,19 +30,19 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      max-width: 1400px; /* evita que fique muito esticado em telas grandes */
-      gap: 60px; /* espaço entre Kris + texto + Susie – ajuste aqui se quiser mais/menos afastado */
+      max-width: 1400px;
+      gap: 60px;
     }
 
     .character {
-      width: 160px; /* tamanho bom para sprites pixel – ajuste se quiser maior */
+      width: 160px;
       height: auto;
       filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7));
       animation: floatChar 6s ease-in-out infinite;
     }
 
-    .left-char { transform: scaleX(1); }   /* Kris normal, olhando direita */
-    .right-char { transform: scaleX(-1); } /* Susie espelhada, olhando esquerda (pro centro) */
+    .left-char { transform: scaleX(1); }
+    .right-char { transform: scaleX(-1); }
 
     .center {
       text-align: center;
@@ -91,6 +91,20 @@
       color: #b19cd9;
       text-shadow: 4px 4px 0 #000;
       letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+
+    /* Estilo para a nova imagem clicável */
+    .clickable-img {
+      width: 80px; /* Ajuste o tamanho conforme necessário */
+      cursor: pointer;
+      transition: transform 0.2s, filter 0.2s;
+      image-rendering: pixelated;
+    }
+
+    .clickable-img:hover {
+      transform: scale(1.1);
+      filter: brightness(1.2) drop-shadow(0 0 10px #ffeb3b);
     }
 
     @keyframes glitch {
@@ -138,20 +152,25 @@
 <body>
 
   <div class="scene">
-    <!-- Kris à esquerda -->
+   
     <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" 
          alt="Kris" class="character left-char">
 
-    <!-- Centro: texto + coração -->
-    <div class="center">
+    
+         <div class="center">
       <h1>OLÁ MUNDO...?</h1>
       <div class="heart">♥</div>
       <div class="subtitle">
         (aperte Z ou ENTER para continuar)
       </div>
+      
+      <a href="SUA_URL_AQUI">
+        <img src="https://utdr.wiki/images/thumb/e/e0/Save_Point.gif/120px-Save_Point.gif" 
+             alt="Ponto de Salvar" class="clickable-img">
+      </a>
     </div>
 
-    <!-- Susie à direita -->
+   
     <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" 
          alt="Susie" class="character right-char">
   </div>
