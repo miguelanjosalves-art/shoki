@@ -19,6 +19,7 @@
     .screen { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; position: absolute; }
     .screen.active { display: flex; }
 
+    /* BOTÃO DO BOSS NO CANTO SUPERIOR DIREITO */
     #boss-trigger {
         position: absolute; top: 20px; right: 20px;
         background: #000; color: red; border: 4px solid red;
@@ -37,6 +38,7 @@
     .ralsei-btn { width: 220px; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 0 10px green); }
     .radiant-glow { animation: rainbowGlow 1s linear infinite; }
 
+    /* BOSS FIGHT */
     #boss-container { display: none; text-align: center; z-index: 100; }
     .enemy-boss { width: 300px; cursor: pointer; filter: drop-shadow(0 0 20px red); transition: transform 0.1s; }
     .enemy-boss:active { transform: scale(0.95); }
@@ -81,12 +83,16 @@
 
     <div id="boss-container">
         <h2 style="color: red; font-family: 'Press Start 2P';">[[ BOSS: SPAMTON NEO ]]</h2>
+        
         <div id="hp-bar-container">
             <div id="hp-fill"></div>
             <div style="position:absolute; width:100%; top:5px; font-family:'VT323'; font-size:1.8rem; color: white;">RALSEI HP</div>
         </div>
+        
         <img src="https://media.tenor.com/970x1T6Nf60AAAAi/spamton-neo-spamton.gif" class="enemy-boss" onclick="hitEnemy()">
+        
         <p id="boss-hp-text" style="font-family:'Press Start 2P'; font-size:1.2rem; color: #ff0000; margin: 10px;">SPAMTON HP: 350</p>
+        
         <button class="btn-action" style="color: yellow; border-color: yellow;" onclick="spareBoss()">[ POUPAR ]</button>
     </div>
 
@@ -98,7 +104,7 @@
   <script>
     let kromer = 0, clickValue = 1, gameStarted = false, isKeyDown = false;
     let isRadiant = false, bossActive = false, ralseiHP = 100;
-    let bossHP = 350; 
+    let bossHP = 350; // HP INICIAL EM 350
     let bossTimer;
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
@@ -140,12 +146,15 @@
         if(bossActive) return;
         bossActive = true;
         ralseiHP = 100;
-        bossHP = 350; 
+        bossHP = 350; // RESET DO BOSS COM 350 HP
+        
         document.getElementById('normal-game').style.display = 'none';
         document.getElementById('boss-container').style.display = 'block';
         document.getElementById('boss-trigger').style.display = 'none';
         document.getElementById('main-body').classList.add('shake-screen');
+        
         updateBossUI();
+
         bossTimer = setInterval(() => {
             ralseiHP -= 10;
             if(ralseiHP <= 0) { ralseiHP = 0; endBoss(false, "VOCÊ FOI DERROTADO..."); }
@@ -160,9 +169,13 @@
 
     function hitEnemy() {
         if(!bossActive) return;
-        bossHP -= 10; 
+        bossHP -= 10; // RALSEI TIRA 10 POR CLICK
         clickSound.currentTime = 0; clickSound.play();
-        if(bossHP <= 0) { bossHP = 0; endBoss(true, "VITÓRIA! +2000$ PARA O [[BIG SHOT]]"); }
+        
+        if(bossHP <= 0) {
+            bossHP = 0;
+            endBoss(true, "VITÓRIA! +2000$ PARA O [[BIG SHOT]]");
+        }
         updateBossUI();
     }
 
@@ -176,6 +189,7 @@
         document.getElementById('main-body').classList.remove('shake-screen');
         document.getElementById('game-sub').innerText = msg;
         document.getElementById('boss-trigger').style.display = 'block';
+
         if(win && !spared) kromer += 2000;
         if(spared) startRadiantBonus();
         updateDisplay();
@@ -187,3 +201,31 @@
         setTimeout(() => {
             isRadiant = false;
             document.getElementById('ralsei-img').classList.remove('radiant-glow');
+        }, 15000);
+    }
+
+    function startTheGame() {
+      if(gameStarted) return;
+      gameStarted = true;
+      if (player && player.playVideo) { player.playVideo(); }
+      document.getElementById('intro-screen').style.display = 'none';
+      document.getElementById('game-screen').classList.add('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toUpperCase();
+      if (key === 'Z' || key === 'ENTER') {
+        if (!gameStarted) startTheGame();
+        else if (bossActive) hitEnemy();
+        else if (!isKeyDown) { addKromer(); isKeyDown = true; }
+      }
+    });
+    document.addEventListener('keyup', (e) => isKeyDown = false);
+
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('yt-player', { height: '0', width: '0', videoId: 'VHo2mEg10zo', playerVars: { 'autoplay': 0, 'controls': 0 } });
+    }
+  </script>
+</body>
+</html>
