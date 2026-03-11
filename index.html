@@ -29,19 +29,32 @@
       margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
-    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
+    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; position: relative; display: inline-block;}
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
-    /* Estilo da Imagem Clicável */
-    .clickable-btn {
-      width: 80px; cursor: pointer; transition: transform 0.2s;
-      filter: drop-shadow(0 0 5px #fff);
+    /* Estilo do Ralsei Girando (Botão) */
+    .ralsei-btn {
+      width: 100px; /* Tamanho do Ralsei */
+      cursor: pointer;
+      transition: transform 0.2s, filter 0.3s;
+      filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
+      display: block;
+      margin: 0 auto;
     }
-    .clickable-btn:hover { transform: scale(1.2); filter: drop-shadow(0 0 15px #ffeb3b); }
+    
+    .ralsei-btn:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 20px rgba(100, 255, 100, 0.8));
+    }
+    
+    .ralsei-btn:active {
+      transform: scale(0.9);
+    }
 
     /* ESCONDER O PLAYER DO YOUTUBE */
     #yt-player {
       position: absolute;
+      top: -1000px; left: -1000px;
       width: 1px; height: 1px;
       opacity: 0; pointer-events: none;
     }
@@ -63,36 +76,30 @@
       <div class="heart">♥</div>
       <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
       
-      <img src="https://utdr.wiki/static/images/deltarune/item/Save_Point.png" 
-           class="clickable-btn" 
+      <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
+           alt="Ralsei Spin" 
+           class="ralsei-btn" 
            onclick="playYoutubeAudio()">
     </div>
 
     <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
   </div>
 
-  <script src="https://youtu.be/VHo2mEg10zo"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     let player;
-    
-    // ATENÇÃO: Troque as letras depois do "v=" pelo ID do seu vídeo!
-    const VIDEO_ID = 'VHo2mEg10zo'; 
+    const VIDEO_ID = 'VHo2mEg10zo'; // ID da música "Once Upon a Time"
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
-        height: '0',
-        width: '0',
+        height: '0', width: '0',
         videoId: VIDEO_ID,
-        playerVars: {
-          'autoplay': 0,
-          'controls': 0
-        }
+        playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1 }
       });
     }
 
     function playYoutubeAudio() {
       if (player && player.playVideo) {
-        player.seekTo(0); // Recomeça o som do início
         player.playVideo();
       }
     }
