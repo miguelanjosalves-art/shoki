@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - EVOLUTION</title>
+  <title>DELTARUNE CLICKER - RADIANT BONUS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -40,33 +40,69 @@
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
 
     .ralsei-btn {
-      width: 100px; cursor: pointer; transition: transform 0.1s;
+      width: 100px; cursor: pointer; transition: transform 0.1s, filter 0.3s;
       filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
     }
     
     .click-target { width: 220px; }
+
+    /* EFEITO DE BRILHO DO RALSEI (2x BONUS) */
+    .radiant-glow {
+        animation: rainbowGlow 1.5s linear infinite;
+        filter: drop-shadow(0 0 25px white) !important;
+    }
+
+    @keyframes rainbowGlow {
+        0% { filter: drop-shadow(0 0 20px red); }
+        20% { filter: drop-shadow(0 0 20px yellow); }
+        40% { filter: drop-shadow(0 0 20px green); }
+        60% { filter: drop-shadow(0 0 20px cyan); }
+        80% { filter: drop-shadow(0 0 20px blue); }
+        100% { filter: drop-shadow(0 0 20px magenta); }
+    }
 
     #kromer-display {
       font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
       color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
     }
 
-    #upgrade-container { margin-top: 20px; display: none; }
-    .btn-upgrade {
-      background: #000; color: #00ff00; border: 4px solid #fff;
-      padding: 15px 30px; font-family: 'Press Start 2P', cursive;
-      font-size: 1.2rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
+    #bonus-timer {
+        color: #00ff00; font-family: 'Press Start 2P', cursive;
+        font-size: 1.2rem; display: none; margin-bottom: 10px;
     }
-    .btn-upgrade:hover { background: #00ff00; color: #000; }
+
+    .btn-action {
+      background: #000; color: #fff; border: 4px solid #fff;
+      padding: 10px 20px; font-family: 'Press Start 2P', cursive;
+      font-size: 1rem; cursor: pointer; margin: 5px;
+    }
+
+    .btn-lutar { color: #ff2d55; border-color: #ff2d55; }
+    .btn-poupar { color: #ffff00; border-color: #ffff00; }
+    .btn-lutar:hover { background: #ff2d55; color: #000; }
+    .btn-poupar:hover { background: #ffff00; color: #000; }
+
+    #boss-container {
+        display: none; position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%); z-index: 100; text-align: center;
+    }
+    .boss-img { width: 280px; filter: drop-shadow(0 0 20px red); }
+    .shake { animation: shake 0.2s infinite; }
+
+    @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        40% { transform: translate(3px, 2px) rotate(-1deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
 
     #yt-player { position: absolute; top: -1000px; }
-
     @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
   </style>
 </head>
-<body>
+<body id="main-body">
 
   <div id="yt-player"></div>
 
@@ -84,16 +120,29 @@
   </div>
 
   <div id="game-screen" class="screen">
+    <div id="bonus-timer">BÔNUS 2X: <span id="time-left">15</span>s</div>
     <div id="kromer-display">$ <span id="count">0</span></div>
     
-    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-         id="ralsei-img"
-         class="ralsei-btn click-target" 
-         onclick="addKromer()">
+    <div id="normal-game">
+        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
+             id="ralsei-img"
+             class="ralsei-btn click-target" 
+             onclick="addKromer()">
+    </div>
+
+    <div id="boss-container">
+        <h2 style="color: red; font-family: 'Press Start 2P';">[[SPAMTON APARECEU]]</h2>
+        <img src="https://media.tenor.com/970x1T6Nf60AAAAi/spamton-neo-spamton.gif" class="boss-img">
+        <p style="color: white; font-family: 'Press Start 2P'; font-size: 1rem;" id="boss-hp">HP: 30</p>
+        <div style="display: flex; justify-content: center;">
+            <button class="btn-action btn-lutar" onclick="hitBoss()">[LUTAR]</button>
+            <button class="btn-action btn-poupar" onclick="spareBoss()">[POUPAR]</button>
+        </div>
+    </div>
          
     <div id="upgrade-container">
-        <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()">
-            [[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)
+        <button id="upgrade-btn" class="btn-action btn-poupar" style="width: auto; height: auto;" onclick="buyUpgrade()">
+            [[UPGRADE]] - 50 KROMER
         </button>
     </div>
 
@@ -107,15 +156,36 @@
     let gameStarted = false;
     let isKeyDown = false;
 
-    // Sons
+    // Lógica do Bônus 2x
+    let isRadiant = false;
+    let bonusTime = 0;
+    let bonusInterval;
+
+    // Lógica do Chefe
+    let lastClickTime = 0;
+    let clickStreak = 0;
+    let bossActive = false;
+    let bossHP = 30;
+
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
     const upgradeSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+    const bossAppearSound = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
 
     function addKromer() {
-      if(!gameStarted) return;
+      if(!gameStarted || bossActive) return;
       
-      kromer += clickValue;
-      document.getElementById('count').innerText = kromer;
+      let now = Date.now();
+      if (now - lastClickTime < 300) { clickStreak++; } 
+      else { clickStreak = 0; }
+      lastClickTime = now;
+
+      if (clickStreak > 5) { spawnBoss(); return; }
+
+      // Aplica o dobro se estiver brilhando
+      let finalValue = isRadiant ? (clickValue * 2) : clickValue;
+      
+      kromer += finalValue;
+      updateDisplay();
       
       clickSound.currentTime = 0;
       clickSound.play();
@@ -124,10 +194,16 @@
       ralsei.style.transform = "scale(1.1)";
       setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
 
-      // Lógica de aparecer botões de upgrade
+      checkUpgrades();
+    }
+
+    function updateDisplay() {
+        document.getElementById('count').innerText = kromer;
+    }
+
+    function checkUpgrades() {
       const container = document.getElementById('upgrade-container');
       const btn = document.getElementById('upgrade-btn');
-
       if (clickValue === 1 && kromer >= 50) {
           container.style.display = 'block';
           btn.innerHTML = "[[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)";
@@ -139,28 +215,84 @@
 
     function buyUpgrade() {
         const container = document.getElementById('upgrade-container');
-        
-        // Primeiro Upgrade (50 pontos)
         if (clickValue === 1 && kromer >= 50) {
             upgradeSound.play();
-            kromer = 0;
-            clickValue = 2;
-            document.getElementById('count').innerText = kromer;
+            kromer = 0; clickValue = 2; updateDisplay();
             container.style.display = 'none';
-            document.getElementById('game-sub').innerText = "VOCÊ É UM [[BIG SHOT]] AGORA!";
-        } 
-        // Segundo Upgrade (200 pontos)
-        else if (clickValue === 2 && kromer >= 200) {
+        } else if (clickValue === 2 && kromer >= 200) {
             upgradeSound.play();
-            kromer = 0;
-            clickValue = 3;
-            document.getElementById('count').innerText = kromer;
+            kromer = 0; clickValue = 3; updateDisplay();
             container.style.display = 'none';
-            
-            // MUDA A IMAGEM DO RALSEI (Ralsei de chapéu)
             document.getElementById('ralsei-img').src = "https://media.tenor.com/T_O8XF69L3AAAAAj/ralsei-deltarune.gif";
-            document.getElementById('game-sub').innerText = "[[POTENCIAL MÁXIMO]] ALCANÇADO!";
         }
+    }
+
+    function spawnBoss() {
+        bossActive = true;
+        bossHP = 30;
+        bossAppearSound.play();
+        document.getElementById('normal-game').style.display = 'none';
+        document.getElementById('boss-container').style.display = 'block';
+        document.getElementById('main-body').classList.add('shake');
+        document.getElementById('game-sub').innerText = "[[AGIR]] OU [[LUTAR]]?";
+    }
+
+    function hitBoss() {
+        bossHP--;
+        document.getElementById('boss-hp').innerText = "HP: " + bossHP;
+        clickSound.currentTime = 0;
+        clickSound.play();
+        if (bossHP <= 0) finishBoss(true);
+    }
+
+    function spareBoss() {
+        upgradeSound.play();
+        finishBoss(false);
+    }
+
+    function finishBoss(isVictory) {
+        bossActive = false;
+        document.getElementById('normal-game').style.display = 'block';
+        document.getElementById('boss-container').style.display = 'none';
+        document.getElementById('main-body').classList.remove('shake');
+        clickStreak = 0;
+
+        if (isVictory) {
+            kromer += 1000;
+            document.getElementById('game-sub').innerText = "VOCÊ DERROTOU O [[BIG SHOT]]! +1000 KROMER";
+        } else {
+            document.getElementById('game-sub').innerText = "SPAMTON FOI [[POUPADO]]. RALSEI ESTÁ RADIANTE!";
+            startRadiantBonus();
+        }
+        updateDisplay();
+    }
+
+    // MECÂNICA DO BRILHO (BÔNUS)
+    function startRadiantBonus() {
+        if (isRadiant) return; // Não reinicia se já estiver ativo
+        
+        isRadiant = true;
+        bonusTime = 15;
+        document.getElementById('ralsei-img').classList.add('radiant-glow');
+        document.getElementById('bonus-timer').style.display = 'block';
+        document.getElementById('time-left').innerText = bonusTime;
+
+        clearInterval(bonusInterval);
+        bonusInterval = setInterval(() => {
+            bonusTime--;
+            document.getElementById('time-left').innerText = bonusTime;
+            if (bonusTime <= 0) {
+                stopRadiantBonus();
+            }
+        }, 1000);
+    }
+
+    function stopRadiantBonus() {
+        isRadiant = false;
+        clearInterval(bonusInterval);
+        document.getElementById('ralsei-img').classList.remove('radiant-glow');
+        document.getElementById('bonus-timer').style.display = 'none';
+        document.getElementById('game-sub').innerText = "O BRILHO SUMIU...";
     }
 
     function startTheGame() {
@@ -174,13 +306,10 @@
     document.addEventListener('keydown', (event) => {
       const key = event.key.toUpperCase();
       if (key === 'Z' || key === 'ENTER') {
-        if (!gameStarted) {
-          startTheGame();
-        } else {
-          if (!isKeyDown) {
-            addKromer();
-            isKeyDown = true;
-          }
+        if (!gameStarted) startTheGame();
+        else if (bossActive) hitBoss();
+        else {
+          if (!isKeyDown) { addKromer(); isKeyDown = true; }
         }
       }
     });
