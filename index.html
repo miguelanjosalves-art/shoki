@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - EVOLUTION</title>
+  <title>DELTARUNE CLICKER - Z EDITION</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -16,6 +16,7 @@
       overflow: hidden; image-rendering: pixelated;
       display: flex; align-items: center; justify-content: center;
       user-select: none;
+      touch-action: none;
     }
 
     .screen {
@@ -40,8 +41,9 @@
     .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; text-align: center; }
 
     .ralsei-btn {
-      width: 220px; cursor: pointer; transition: transform 0.1s;
+      width: 220px; transition: transform 0.1s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
+      pointer-events: none; /* CLIQUES DESATIVADOS */
     }
     
     #kromer-display {
@@ -55,7 +57,7 @@
       padding: 15px 30px; font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
     }
-    .btn-upgrade:hover { background: #00ff00; color: #000; transform: scale(1.05); }
+    .btn-upgrade:hover { background: #00ff00; color: #000; }
 
     #yt-player { position: absolute; top: -1000px; }
 
@@ -64,7 +66,7 @@
     @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
   <div id="yt-player"></div>
 
@@ -74,7 +76,7 @@
       <div class="center">
         <h1>OLÁ MUNDO...?</h1>
         <div class="heart">♥</div>
-        <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
+        <div class="subtitle">(aperte Z para continuar)</div>
       </div>
       <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
     </div>
@@ -85,15 +87,14 @@
     
     <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
          id="ralsei-img"
-         class="ralsei-btn" 
-         onclick="addKromer()">
+         class="ralsei-btn">
          
     <div id="upgrade-container">
         <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()">
-            </button>
+        </button>
     </div>
 
-    <div class="subtitle" id="game-sub" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
+    <div class="subtitle" id="game-sub" style="margin-top: 20px;">USE A TECLA [Z]!</div>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -108,7 +109,7 @@
 
     function updateDisplay() {
       document.getElementById('count').innerText = Math.floor(kromer);
-      checkUpgrades(); // Verifica se deve mostrar o botão sempre que o valor mudar
+      checkUpgrades();
     }
 
     function addKromer() {
@@ -129,17 +130,14 @@
       const container = document.getElementById('upgrade-container');
       const btn = document.getElementById('upgrade-btn');
 
-      // Upgrade 1: 50 Kromer
       if (clickValue === 1 && kromer >= 50) {
           container.style.display = 'block';
           btn.innerHTML = "[[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)";
       } 
-      // Upgrade 2: 200 Kromer
       else if (clickValue === 2 && kromer >= 200) {
           container.style.display = 'block';
           btn.innerHTML = "[[UPGRADE SUPREMO]] - 200 KROMER <br> (MUDAR APARÊNCIA)";
       }
-      // NOVO Upgrade: 500 Kromer
       else if (clickValue === 3 && kromer >= 500) {
           container.style.display = 'block';
           btn.innerHTML = "[[HYPER-LINK]] - 500 KROMER <br> (+5 POR CLIQUE)";
@@ -162,16 +160,16 @@
           upgradeSound.play();
           kromer -= 200;
           clickValue = 3;
-          // AQUI MUDA O RALSEI PARA A VERSÃO COM CHAPÉU
-          ralseiImg.src = "https://media.tenor.com/T_O8XF69L3AAAAAj/ralsei-deltarune.gif";
-          gameSub.innerText = "[[ESTILO]] É TUDO!";
+          // NOVO LINK DO RALSEI AQUI:
+          ralseiImg.src = "https://media.tenor.com/pBhLGoicbhsAAAAi/ralsei-ralsei-spin.gif";
+          gameSub.innerText = "OLHA ELE GIRANDO!!";
       }
       else if (clickValue === 3 && kromer >= 500) {
           upgradeSound.play();
-          kromer -= 500; // Retira exatamente 500
-          clickValue += 5; // Adiciona +5 ao valor do clique (total 8)
-          gameSub.innerHTML = "[[PODER NEO]] DESBLOQUEADO!";
-          document.body.style.filter = "hue-rotate(90deg)"; // Efeito visual de poder
+          kromer -= 500;
+          clickValue += 5; 
+          gameSub.innerHTML = "[[PODER NEO]] ATIVADO!";
+          document.body.style.filter = "hue-rotate(150deg) brightness(1.2)";
       }
 
       updateDisplay();
@@ -185,10 +183,9 @@
       document.getElementById('game-screen').classList.add('active');
     }
 
-    // Atalhos de teclado
     document.addEventListener('keydown', (event) => {
       const key = event.key.toUpperCase();
-      if (key === 'Z' || key === 'ENTER') {
+      if (key === 'Z') {
         if (!gameStarted) {
           startTheGame();
         } else {
@@ -202,10 +199,9 @@
 
     document.addEventListener('keyup', (event) => {
       const key = event.key.toUpperCase();
-      if (key === 'Z' || key === 'ENTER') isKeyDown = false;
+      if (key === 'Z') isKeyDown = false;
     });
 
-    // YouTube API
     let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
