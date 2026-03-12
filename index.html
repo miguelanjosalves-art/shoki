@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - Z EDITION</title>
+  <title>DELTARUNE CLICKER - SAVE & RANKING</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -15,8 +15,7 @@
       color: #e0c8ff; font-family: 'VT323', monospace; font-size: 2.4rem;
       overflow: hidden; image-rendering: pixelated;
       display: flex; align-items: center; justify-content: center;
-      user-select: none;
-      touch-action: none;
+      user-select: none; touch-action: none;
     }
 
     .screen {
@@ -29,35 +28,54 @@
     .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
     .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
     .right-char { transform: scaleX(-1); }
-    .center { text-align: center; }
-
+    
     h1 {
-      font-family: 'Press Start 2P', cursive; font-size: 4.2rem; color: #fff8e8;
+      font-family: 'Press Start 2P', cursive; font-size: 3.5rem; color: #fff8e8;
       text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000;
       margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
-    .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
-    .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; text-align: center; }
+    .heart { font-size: 60px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
+    .subtitle { font-size: 1.8rem; color: #b19cd9; margin-bottom: 20px; text-align: center; }
 
     .ralsei-btn {
-      width: 220px; transition: transform 0.1s;
+      width: 200px; transition: transform 0.1s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
-      pointer-events: none; /* CLIQUES DESATIVADOS */
+      pointer-events: none;
     }
     
     #kromer-display {
-      font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
-      color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
+      font-family: 'Press Start 2P', cursive; font-size: 3rem;
+      color: #ffff00; text-shadow: 4px 4px 0 #000; margin-bottom: 10px;
     }
 
-    #upgrade-container { margin-top: 20px; display: none; min-height: 80px; }
+    .timer-display { font-size: 1.5rem; color: #fff; margin-bottom: 20px; }
+
+    #upgrade-container { margin-top: 10px; display: none; min-height: 80px; }
+    
+    .menu-buttons {
+      position: absolute; bottom: 20px; display: flex; gap: 20px;
+    }
+
+    .btn-ui {
+      background: #000; color: #fff; border: 3px solid #fff;
+      padding: 10px 20px; font-family: 'Press Start 2P', cursive;
+      font-size: 0.8rem; cursor: pointer;
+    }
+    .btn-ui:hover { background: #fff; color: #000; }
+    
     .btn-upgrade {
       background: #000; color: #00ff00; border: 4px solid #fff;
       padding: 15px 30px; font-family: 'Press Start 2P', cursive;
-      font-size: 1.2rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
+      font-size: 1.1rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
     }
-    .btn-upgrade:hover { background: #00ff00; color: #000; }
+
+    /* Modal Ranking */
+    #ranking-modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); z-index: 100;
+      align-items: center; justify-content: center; flex-direction: column;
+    }
 
     #yt-player { position: absolute; top: -1000px; }
 
@@ -72,29 +90,39 @@
 
   <div id="intro-screen" class="screen active">
     <div class="scene">
-      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" alt="Kris" class="character">
-      <div class="center">
-        <h1>OLÁ MUNDO...?</h1>
+      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
+      <div style="text-align:center">
+        <h1>DELTARUNE CLICKER</h1>
         <div class="heart">♥</div>
-        <div class="subtitle">(aperte Z para continuar)</div>
+        <div class="subtitle">Aperte [Z] para Iniciar</div>
       </div>
-      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
+      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" class="character right-char">
     </div>
   </div>
 
   <div id="game-screen" class="screen">
     <div id="kromer-display">$ <span id="count">0</span></div>
+    <div class="timer-display">TEMPO: <span id="timer">00:00</span></div>
     
-    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
-         id="ralsei-img"
-         class="ralsei-btn">
+    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" id="ralsei-img" class="ralsei-btn">
          
     <div id="upgrade-container">
-        <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()">
-        </button>
+        <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()"></button>
     </div>
 
-    <div class="subtitle" id="game-sub" style="margin-top: 20px;">USE A TECLA [Z]!</div>
+    <div class="subtitle" id="game-sub" style="margin-top: 20px;">TECLA [Z] PARA COLETAR</div>
+
+    <div class="menu-buttons">
+      <button class="btn-ui" onclick="saveGame()">SALVAR</button>
+      <button class="btn-ui" onclick="toggleRanking()">RANKING</button>
+      <button class="btn-ui" onclick="resetGame()" style="border-color: red; color: red;">RESET</button>
+    </div>
+  </div>
+
+  <div id="ranking-modal">
+    <h2 style="font-family:'Press Start 2P'; color: yellow;">[[ RECORDES LOCAIS ]]</h2>
+    <div id="ranking-list" style="margin: 20px 0; text-align: left; min-width: 300px;"></div>
+    <button class="btn-ui" onclick="toggleRanking()">FECHAR</button>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -103,24 +131,35 @@
     let clickValue = 1;
     let gameStarted = false;
     let isKeyDown = false;
+    let secondsPlayed = 0;
+    let timerInterval;
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
     const upgradeSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
 
+    // Inicialização
+    window.onload = () => {
+        loadGame();
+    };
+
+    function formatTime(s) {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
     function updateDisplay() {
       document.getElementById('count').innerText = Math.floor(kromer);
+      document.getElementById('timer').innerText = formatTime(secondsPlayed);
       checkUpgrades();
     }
 
     function addKromer() {
       if(!gameStarted) return;
-      
       kromer += clickValue;
       updateDisplay();
-      
       clickSound.currentTime = 0;
       clickSound.play();
-      
       const ralsei = document.getElementById('ralsei-img');
       ralsei.style.transform = "scale(1.1)";
       setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
@@ -129,18 +168,17 @@
     function checkUpgrades() {
       const container = document.getElementById('upgrade-container');
       const btn = document.getElementById('upgrade-btn');
-
       if (clickValue === 1 && kromer >= 50) {
           container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)";
+          btn.innerHTML = "[[UPGRADE]] - 50 <br> (+2 POR Z)";
       } 
       else if (clickValue === 2 && kromer >= 200) {
           container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE SUPREMO]] - 200 KROMER <br> (MUDAR APARÊNCIA)";
+          btn.innerHTML = "[[SUPREMO]] - 200 <br> (GIRAR!)";
       }
       else if (clickValue === 3 && kromer >= 500) {
           container.style.display = 'block';
-          btn.innerHTML = "[[HYPER-LINK]] - 500 KROMER <br> (+5 POR CLIQUE)";
+          btn.innerHTML = "[[NEO]] - 500 <br> (+5 POR Z)";
       } else {
           container.style.display = 'none';
       }
@@ -148,31 +186,80 @@
 
     function buyUpgrade() {
       const ralseiImg = document.getElementById('ralsei-img');
-      const gameSub = document.getElementById('game-sub');
-
       if (clickValue === 1 && kromer >= 50) {
-          upgradeSound.play();
-          kromer -= 50;
-          clickValue = 2;
-          gameSub.innerText = "VOCÊ É UM [[BIG SHOT]] AGORA!";
+          upgradeSound.play(); kromer -= 50; clickValue = 2;
+          document.getElementById('game-sub').innerText = "BIG SHOT!";
       } 
       else if (clickValue === 2 && kromer >= 200) {
-          upgradeSound.play();
-          kromer -= 200;
-          clickValue = 3;
-          // NOVO LINK DO RALSEI AQUI:
+          upgradeSound.play(); kromer -= 200; clickValue = 3;
           ralseiImg.src = "https://media.tenor.com/pBhLGoicbhsAAAAi/ralsei-ralsei-spin.gif";
-          gameSub.innerText = "OLHA ELE GIRANDO!!";
+          document.getElementById('game-sub').innerText = "OLHA ELE GIRANDO!";
       }
       else if (clickValue === 3 && kromer >= 500) {
-          upgradeSound.play();
-          kromer -= 500;
-          clickValue += 5; 
-          gameSub.innerHTML = "[[PODER NEO]] ATIVADO!";
-          document.body.style.filter = "hue-rotate(150deg) brightness(1.2)";
+          upgradeSound.play(); kromer -= 500; clickValue = 8;
+          document.body.style.filter = "hue-rotate(150deg)";
       }
-
       updateDisplay();
+    }
+
+    // SISTEMA DE SAVE
+    function saveGame() {
+        const gameState = {
+            kromer: kromer,
+            clickValue: clickValue,
+            secondsPlayed: secondsPlayed,
+            ralseiImg: document.getElementById('ralsei-img').src,
+            filter: document.body.style.filter
+        };
+        localStorage.setItem('deltarune_save', JSON.stringify(gameState));
+        
+        // Atualiza Ranking ao salvar
+        updateRanking(kromer, secondsPlayed);
+        alert("PONTUAÇÃO SALVA!");
+    }
+
+    function loadGame() {
+        const saved = localStorage.getItem('deltarune_save');
+        if (saved) {
+            const data = JSON.parse(saved);
+            kromer = data.kromer;
+            clickValue = data.clickValue;
+            secondsPlayed = data.secondsPlayed;
+            document.getElementById('ralsei-img').src = data.ralseiImg || "https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif";
+            document.body.style.filter = data.filter || "none";
+            updateDisplay();
+        }
+    }
+
+    function resetGame() {
+        if(confirm("DELETAR SEU PROGRESSO?")) {
+            localStorage.removeItem('deltarune_save');
+            location.reload();
+        }
+    }
+
+    // SISTEMA DE RANKING LOCAL
+    function updateRanking(score, time) {
+        let ranking = JSON.parse(localStorage.getItem('deltarune_ranking') || "[]");
+        ranking.push({ score, time, date: new Date().toLocaleDateString() });
+        ranking.sort((a, b) => b.score - a.score);
+        ranking = ranking.slice(0, 5); // Mantém apenas os top 5
+        localStorage.setItem('deltarune_ranking', JSON.stringify(ranking));
+    }
+
+    function toggleRanking() {
+        const modal = document.getElementById('ranking-modal');
+        const list = document.getElementById('ranking-list');
+        if (modal.style.display === 'flex') {
+            modal.style.display = 'none';
+        } else {
+            let ranking = JSON.parse(localStorage.getItem('deltarune_ranking') || "[]");
+            list.innerHTML = ranking.length ? "" : "<p>NENHUM RECORDE AINDA</p>";
+            ranking.forEach((item, i) => {
+                list.innerHTML += `<p>${i+1}º - $${item.score} | TEMPO: ${formatTime(item.time)} | ${item.date}</p>`;
+            });
+            modal.style.display = 'flex';
+        }
     }
 
     function startTheGame() {
@@ -181,25 +268,22 @@
       if (player && player.playVideo) { player.playVideo(); }
       document.getElementById('intro-screen').style.display = 'none';
       document.getElementById('game-screen').classList.add('active');
+      
+      timerInterval = setInterval(() => {
+          secondsPlayed++;
+          document.getElementById('timer').innerText = formatTime(secondsPlayed);
+      }, 1000);
     }
 
     document.addEventListener('keydown', (event) => {
-      const key = event.key.toUpperCase();
-      if (key === 'Z') {
-        if (!gameStarted) {
-          startTheGame();
-        } else {
-          if (!isKeyDown) {
-            addKromer();
-            isKeyDown = true;
-          }
-        }
+      if (event.key.toUpperCase() === 'Z') {
+        if (!gameStarted) startTheGame();
+        else if (!isKeyDown) { addKromer(); isKeyDown = true; }
       }
     });
 
     document.addEventListener('keyup', (event) => {
-      const key = event.key.toUpperCase();
-      if (key === 'Z') isKeyDown = false;
+      if (event.key.toUpperCase() === 'Z') isKeyDown = false;
     });
 
     let player;
