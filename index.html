@@ -37,27 +37,25 @@
     }
 
     .heart { font-size: 90px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
-    .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; }
+    .subtitle { font-size: 2rem; color: #b19cd9; margin-bottom: 20px; text-align: center; }
 
     .ralsei-btn {
-      width: 100px; cursor: pointer; transition: transform 0.1s;
-      filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.3));
+      width: 220px; cursor: pointer; transition: transform 0.1s;
+      filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
     }
     
-    .click-target { width: 220px; }
-
     #kromer-display {
       font-family: 'Press Start 2P', cursive; font-size: 3.5rem;
       color: #ffff00; text-shadow: 5px 5px 0 #000; margin-bottom: 20px;
     }
 
-    #upgrade-container { margin-top: 20px; display: none; }
+    #upgrade-container { margin-top: 20px; display: none; min-height: 80px; }
     .btn-upgrade {
       background: #000; color: #00ff00; border: 4px solid #fff;
       padding: 15px 30px; font-family: 'Press Start 2P', cursive;
       font-size: 1.2rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
     }
-    .btn-upgrade:hover { background: #00ff00; color: #000; }
+    .btn-upgrade:hover { background: #00ff00; color: #000; transform: scale(1.05); }
 
     #yt-player { position: absolute; top: -1000px; }
 
@@ -77,7 +75,6 @@
         <h1>OLÁ MUNDO...?</h1>
         <div class="heart">♥</div>
         <div class="subtitle">(aperte Z ou ENTER para continuar)</div>
-        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" class="ralsei-btn">
       </div>
       <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" alt="Susie" class="character right-char">
     </div>
@@ -88,13 +85,12 @@
     
     <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" 
          id="ralsei-img"
-         class="ralsei-btn click-target" 
+         class="ralsei-btn" 
          onclick="addKromer()">
          
     <div id="upgrade-container">
         <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()">
-            [[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)
-        </button>
+            </button>
     </div>
 
     <div class="subtitle" id="game-sub" style="margin-top: 20px;">PEGUE TODO O [[KROMER]]!</div>
@@ -107,15 +103,19 @@
     let gameStarted = false;
     let isKeyDown = false;
 
-    // Sons
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
     const upgradeSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+
+    function updateDisplay() {
+      document.getElementById('count').innerText = Math.floor(kromer);
+      checkUpgrades(); // Verifica se deve mostrar o botão sempre que o valor mudar
+    }
 
     function addKromer() {
       if(!gameStarted) return;
       
       kromer += clickValue;
-      document.getElementById('count').innerText = kromer;
+      updateDisplay();
       
       clickSound.currentTime = 0;
       clickSound.play();
@@ -123,44 +123,58 @@
       const ralsei = document.getElementById('ralsei-img');
       ralsei.style.transform = "scale(1.1)";
       setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
+    }
 
-      // Lógica de aparecer botões de upgrade
+    function checkUpgrades() {
       const container = document.getElementById('upgrade-container');
       const btn = document.getElementById('upgrade-btn');
 
+      // Upgrade 1: 50 Kromer
       if (clickValue === 1 && kromer >= 50) {
           container.style.display = 'block';
           btn.innerHTML = "[[UPGRADE]] - 50 KROMER <br> (+2 POR CLIQUE)";
-      } else if (clickValue === 2 && kromer >= 200) {
+      } 
+      // Upgrade 2: 200 Kromer
+      else if (clickValue === 2 && kromer >= 200) {
           container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE SUPREMO]] - 200 KROMER <br> (+3 POR CLIQUE)";
+          btn.innerHTML = "[[UPGRADE SUPREMO]] - 200 KROMER <br> (MUDAR APARÊNCIA)";
+      }
+      // NOVO Upgrade: 500 Kromer
+      else if (clickValue === 3 && kromer >= 500) {
+          container.style.display = 'block';
+          btn.innerHTML = "[[HYPER-LINK]] - 500 KROMER <br> (+5 POR CLIQUE)";
+      } else {
+          container.style.display = 'none';
       }
     }
 
     function buyUpgrade() {
-        const container = document.getElementById('upgrade-container');
-        
-        // Primeiro Upgrade (50 pontos)
-        if (clickValue === 1 && kromer >= 50) {
-            upgradeSound.play();
-            kromer = 0;
-            clickValue = 2;
-            document.getElementById('count').innerText = kromer;
-            container.style.display = 'none';
-            document.getElementById('game-sub').innerText = "VOCÊ É UM [[BIG SHOT]] AGORA!";
-        } 
-        // Segundo Upgrade (200 pontos)
-        else if (clickValue === 2 && kromer >= 200) {
-            upgradeSound.play();
-            kromer = 0;
-            clickValue = 3;
-            document.getElementById('count').innerText = kromer;
-            container.style.display = 'none';
-            
-            // MUDA A IMAGEM DO RALSEI (Ralsei de chapéu)
-            document.getElementById('ralsei-img').src = "https://media.tenor.com/T_O8XF69L3AAAAAj/ralsei-deltarune.gif";
-            document.getElementById('game-sub').innerText = "[[POTENCIAL MÁXIMO]] ALCANÇADO!";
-        }
+      const ralseiImg = document.getElementById('ralsei-img');
+      const gameSub = document.getElementById('game-sub');
+
+      if (clickValue === 1 && kromer >= 50) {
+          upgradeSound.play();
+          kromer -= 50;
+          clickValue = 2;
+          gameSub.innerText = "VOCÊ É UM [[BIG SHOT]] AGORA!";
+      } 
+      else if (clickValue === 2 && kromer >= 200) {
+          upgradeSound.play();
+          kromer -= 200;
+          clickValue = 3;
+          // AQUI MUDA O RALSEI PARA A VERSÃO COM CHAPÉU
+          ralseiImg.src = "https://media.tenor.com/T_O8XF69L3AAAAAj/ralsei-deltarune.gif";
+          gameSub.innerText = "[[ESTILO]] É TUDO!";
+      }
+      else if (clickValue === 3 && kromer >= 500) {
+          upgradeSound.play();
+          kromer -= 500; // Retira exatamente 500
+          clickValue += 5; // Adiciona +5 ao valor do clique (total 8)
+          gameSub.innerHTML = "[[PODER NEO]] DESBLOQUEADO!";
+          document.body.style.filter = "hue-rotate(90deg)"; // Efeito visual de poder
+      }
+
+      updateDisplay();
     }
 
     function startTheGame() {
@@ -171,6 +185,7 @@
       document.getElementById('game-screen').classList.add('active');
     }
 
+    // Atalhos de teclado
     document.addEventListener('keydown', (event) => {
       const key = event.key.toUpperCase();
       if (key === 'Z' || key === 'ENTER') {
@@ -190,6 +205,7 @@
       if (key === 'Z' || key === 'ENTER') isKeyDown = false;
     });
 
+    // YouTube API
     let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
@@ -197,26 +213,6 @@
         playerVars: { 'autoplay': 0, 'controls': 0 }
       });
     }
-    // Adicione esta variável no topo do seu <script>
-let isDemoOver = false;
-
-// Adicione esta função para mostrar a mensagem
-function showDemoEnd() {
-    isDemoOver = true;
-    const msg = document.createElement('div');
-    msg.innerHTML = `<div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); 
-        background:black; border:5px solid #ff6ef0; padding:40px; text-align:center; z-index:1000; 
-        font-family:'Press Start 2P', cursive; color:white; box-shadow:0 0 30px #ff6ef0;">
-        <h2 style="color:yellow;">[[ ALERTA ]]</h2>
-        <p>isso é uma demo, mais em breve...</p>
-    </div>`;
-    document.body.appendChild(msg);
-}
-
-// Dentro da sua função addKromer(), coloque isso logo após ganhar os pontos:
-if (kromer >= 500 && !isDemoOver) {
-    showDemoEnd();
-}
   </script>
 </body>
 </html>
