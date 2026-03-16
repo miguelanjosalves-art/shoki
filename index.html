@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - CYBER WORLD EDITION</title>
+  <title>DELTARUNE CLICKER - CLASSIC STYLE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -25,14 +25,22 @@
     }
     .screen.active { display: flex; }
 
+    /* VOLTANDO COM A CENA DA INTRO */
+    .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
+    .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
+    .right-char { transform: scaleX(-1); }
+    
     h1 {
-      font-family: 'Press Start 2P', cursive; font-size: 3rem; color: #fff8e8;
+      font-family: 'Press Start 2P', cursive; font-size: 3.5rem; color: #fff8e8;
       text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000;
-      margin-bottom: 20px; animation: glitch 5s infinite; text-align: center;
+      margin: 0 0 20px 0; animation: glitch 5s infinite;
     }
 
+    .heart { font-size: 60px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
+
     .ralsei-btn {
-      width: 200px; transition: transform 0.1s;
+      width: 200px; height: auto; display: block; /* Garante que apareça */
+      transition: transform 0.1s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
       pointer-events: none;
     }
@@ -64,6 +72,8 @@
     }
 
     @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
   </style>
 </head>
 <body oncontextmenu="return false;">
@@ -71,8 +81,15 @@
   <div id="yt-player" style="position: absolute; top: -1000px;"></div>
 
   <div id="intro-screen" class="screen active">
-    <h1>DELTARUNE CLICKER</h1>
-    <div style="font-size: 1.5rem;">Aperte [Z] para Iniciar</div>
+    <div class="scene">
+      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
+      <div style="text-align:center">
+        <h1>DELTARUNE CLICKER</h1>
+        <div class="heart">♥</div>
+        <div style="font-size: 1.5rem; color: #b19cd9;">Aperte [Z] para Iniciar</div>
+      </div>
+      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" class="character right-char">
+    </div>
   </div>
 
   <div id="game-screen" class="screen">
@@ -108,8 +125,6 @@
     let isKeyDown = false;
     let secondsPlayed = 0;
     let timerInterval;
-    
-    // Música Fixa: A Cyber's World?
     const musicId = "In3y0C7mQvA"; 
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
@@ -164,9 +179,7 @@
           container.style.display = 'block';
           btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 PONTOS POR Z)";
       }
-      else {
-          container.style.display = 'none';
-      }
+      else { container.style.display = 'none'; }
     }
 
     function buyUpgrade() {
@@ -197,7 +210,6 @@
           ralseiImg.src = "https://media.tenor.com/ZIn_0w7V170AAAAi/ralsei-deltarune.gif";
           document.body.style.filter = "contrast(1.5) brightness(1.1) sepia(0.3)";
           sub.innerHTML = "[[PODER MÁXIMO CIBERNÉTICO]]";
-          // Agora não muda de música, apenas mantém a Cyber World
       }
       updateDisplay();
     }
