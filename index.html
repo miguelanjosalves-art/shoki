@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - CLASSIC STYLE</title>
+  <title>DELTARUNE CLICKER - MEGA UPGRADE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -25,7 +25,6 @@
     }
     .screen.active { display: flex; }
 
-    /* VOLTANDO COM A CENA DA INTRO */
     .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
     .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
     .right-char { transform: scaleX(-1); }
@@ -39,7 +38,7 @@
     .heart { font-size: 60px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
 
     .ralsei-btn {
-      width: 200px; height: auto; display: block; /* Garante que apareça */
+      width: 200px; height: auto; display: block;
       transition: transform 0.1s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
       pointer-events: none;
@@ -84,7 +83,7 @@
     <div class="scene">
       <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
       <div style="text-align:center">
-        <h1>OLA MUNDO...?</h1>
+        <h1>DELTARUNE CLICKER</h1>
         <div class="heart">♥</div>
         <div style="font-size: 1.5rem; color: #b19cd9;">Aperte [Z] para Iniciar</div>
       </div>
@@ -175,9 +174,14 @@
           container.style.display = 'block';
           btn.innerHTML = "[[ULTRA]] - 1700 <br> (8 PONTOS FIXOS)";
       }
-      else if (clickValue === 8 && kromer >= 3000) {
+      else if (clickValue === 8 && kromer >= 3000 && clickValue < 12) {
           container.style.display = 'block';
           btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 PONTOS POR Z)";
+      }
+      // NOVO UPGRADE 5500
+      else if (clickValue === 12 && kromer >= 5500) {
+          container.style.display = 'block';
+          btn.innerHTML = "[[BIGGER SHOT]] - 5500 <br> (24 PONTOS POR Z)";
       }
       else { container.style.display = 'none'; }
     }
@@ -200,16 +204,22 @@
           document.body.style.filter = "hue-rotate(150deg)";
           sub.innerText = "PODER NEO ATIVADO!";
       }
-      else if (clickValue === 8 && kromer < 3000 && kromer >= 1700) {
+      else if (clickValue === 8 && kromer >= 1700 && kromer < 3000) {
           upgradeSound.play(); kromer -= 1700;
           document.body.style.filter = "hue-rotate(280deg) brightness(1.2)";
           sub.innerHTML = "[[OTIMIZADO]]";
       }
       else if (clickValue === 8 && kromer >= 3000) {
           upgradeSound.play(); kromer -= 3000; clickValue = 12;
-          ralseiImg.src = "https://media.tenor.com/6W3mq2r2RdMAAAAi/kralsei-deltarune.gif";
+          ralseiImg.src = "https://media.tenor.com/ZIn_0w7V170AAAAi/ralsei-deltarune.gif";
           document.body.style.filter = "contrast(1.5) brightness(1.1) sepia(0.3)";
           sub.innerHTML = "[[PODER MÁXIMO CIBERNÉTICO]]";
+      }
+      // COMPRA DO NOVO UPGRADE 5500
+      else if (clickValue === 12 && kromer >= 5500) {
+          upgradeSound.play(); kromer -= 5500; clickValue = 24;
+          document.body.style.filter = "contrast(1.8) brightness(1.3) hue-rotate(320deg)";
+          sub.innerHTML = "[[STATUS: DIVINDADE CIBERNÉTICA]]";
       }
       updateDisplay();
     }
