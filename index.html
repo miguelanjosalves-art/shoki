@@ -222,12 +222,14 @@
       }
       else if (clickValue === 12 && kromer >= 5500) {
           upgradeSound.play(); kromer -= 5500; clickValue = 24;
+          ralseiImg.src = "https://media1.tenor.com/m/tEpZqM3-TYcAAAAC/lancer-breakdance-lancer.gif";
           document.body.style.filter = "contrast(1.8) brightness(1.3) hue-rotate(320deg)";
           sub.innerHTML = "[[STATUS: DIVINDADE]]";
       }
       // COMPRA DO AUTO-CLICK 6700
       else if (autoValue === 0 && kromer >= 6700) {
           upgradeSound.play(); kromer -= 6700; autoValue = 10;
+           ralseiImg.src = "https://media1.tenor.com/m/tEpZqM3-TYcAAAAC/lancer-breakdance-lancer.gif";
           document.body.style.filter = "hue-rotate(45deg) brightness(1.4) contrast(1.2)";
           sub.innerHTML = "[[GERAÇÃO AUTOMÁTICA ATIVA]]";
       }
