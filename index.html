@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - AUTO-GEN</title>
+  <title>DELTARUNE CLICKER - MOUSE & TOUCH</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
       color: #e0c8ff; font-family: 'VT323', monospace; font-size: 2.4rem;
       overflow: hidden; image-rendering: pixelated;
       display: flex; align-items: center; justify-content: center;
-      user-select: none; touch-action: none;
+      user-select: none; touch-action: manipulation;
     }
 
     .screen {
@@ -30,19 +30,20 @@
     .right-char { transform: scaleX(-1); }
     
     h1 {
-      font-family: 'Press Start 2P', cursive; font-size: 3.5rem; color: #fff8e8;
+      font-family: 'Press Start 2P', cursive; font-size: 3rem; color: #fff8e8;
       text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000;
-      margin: 0 0 20px 0; animation: glitch 5s infinite;
+      margin: 0 0 20px 0; animation: glitch 5s infinite; text-align: center;
     }
 
     .heart { font-size: 60px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
 
     .ralsei-btn {
-      width: 200px; height: auto; display: block;
-      transition: transform 0.1s;
+      width: 220px; height: auto; display: block;
+      transition: transform 0.05s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
-      pointer-events: none;
+      cursor: pointer; /* Agora mostra a mãozinha de clique */
     }
+    .ralsei-btn:active { transform: scale(0.9) !important; }
     
     #kromer-display {
       font-family: 'Press Start 2P', cursive; font-size: 3rem;
@@ -79,13 +80,13 @@
 
   <div id="yt-player" style="position: absolute; top: -1000px;"></div>
 
-  <div id="intro-screen" class="screen active">
+  <div id="intro-screen" class="screen active" onclick="startTheGame()">
     <div class="scene">
       <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
       <div style="text-align:center">
         <h1>DELTARUNE CLICKER</h1>
         <div class="heart">♥</div>
-        <div style="font-size: 1.5rem; color: #b19cd9;">Aperte [Z] para Iniciar</div>
+        <div style="font-size: 1.5rem; color: #b19cd9;">Clique para Iniciar</div>
       </div>
       <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" class="character right-char">
     </div>
@@ -95,13 +96,13 @@
     <div id="kromer-display">$ <span id="count">0</span></div>
     <div class="timer-display">TEMPO: <span id="timer">00:00</span></div>
     
-    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" id="ralsei-img" class="ralsei-btn">
+    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" id="ralsei-img" class="ralsei-btn" onclick="addKromer()">
          
     <div id="upgrade-container">
         <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()"></button>
     </div>
 
-    <div class="subtitle" id="game-sub" style="margin-top: 20px; font-size: 1.5rem;">USE A TECLA [Z]!</div>
+    <div class="subtitle" id="game-sub" style="margin-top: 20px; font-size: 1.5rem;">CLIQUE NO RALSEI!</div>
 
     <div class="menu-buttons">
       <button class="btn-ui" onclick="saveGame()">SALVAR</button>
@@ -120,9 +121,8 @@
   <script>
     let kromer = 0;
     let clickValue = 1;
-    let autoValue = 0; // Pontos por segundo
+    let autoValue = 0;
     let gameStarted = false;
-    let isKeyDown = false;
     let secondsPlayed = 0;
     let timerInterval;
     const musicId = "In3y0C7mQvA"; 
@@ -148,8 +148,10 @@
       if(!gameStarted) return;
       kromer += clickValue;
       updateDisplay();
+      
       clickSound.currentTime = 0;
       clickSound.play();
+
       const ralsei = document.getElementById('ralsei-img');
       ralsei.style.transform = "scale(1.1)";
       setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
@@ -161,7 +163,7 @@
       
       if (clickValue === 1 && kromer >= 50) {
           container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE]] - 50 <br> (+2 POR Z)";
+          btn.innerHTML = "[[UPGRADE]] - 50 <br> (+2 POR CLIQUE)";
       } 
       else if (clickValue === 2 && kromer >= 200) {
           container.style.display = 'block';
@@ -169,7 +171,7 @@
       }
       else if (clickValue === 3 && kromer >= 500) {
           container.style.display = 'block';
-          btn.innerHTML = "[[NEO]] - 500 <br> (+5 POR Z)";
+          btn.innerHTML = "[[NEO]] - 500 <br> (+5 POR CLIQUE)";
       } 
       else if (clickValue === 8 && kromer >= 1700 && !document.body.style.filter.includes("280deg")) {
           container.style.display = 'block';
@@ -177,13 +179,12 @@
       }
       else if (clickValue === 8 && kromer >= 3000 && clickValue < 12) {
           container.style.display = 'block';
-          btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 PONTOS POR Z)";
+          btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 PONTOS POR CLIQUE)";
       }
       else if (clickValue === 12 && kromer >= 5500 && clickValue < 24) {
           container.style.display = 'block';
-          btn.innerHTML = "[[BIGGER SHOT]] - 5500 <br> (24 PONTOS POR Z)";
+          btn.innerHTML = "[[BIGGER SHOT]] - 5500 <br> (24 PONTOS POR CLIQUE)";
       }
-      // NOVO UPGRADE 6700
       else if (autoValue === 0 && kromer >= 6700) {
           container.style.display = 'block';
           btn.innerHTML = "[[GERADOR]] - 6700 <br> (+10 P/ SEGUNDO)";
@@ -222,14 +223,11 @@
       }
       else if (clickValue === 12 && kromer >= 5500) {
           upgradeSound.play(); kromer -= 5500; clickValue = 24;
-          ralseiImg.src = "https://media1.tenor.com/m/tEpZqM3-TYcAAAAC/lancer-breakdance-lancer.gif";
           document.body.style.filter = "contrast(1.8) brightness(1.3) hue-rotate(320deg)";
           sub.innerHTML = "[[STATUS: DIVINDADE]]";
       }
-      // COMPRA DO AUTO-CLICK 6700
       else if (autoValue === 0 && kromer >= 6700) {
           upgradeSound.play(); kromer -= 6700; autoValue = 10;
-           ralseiImg.src = "https://media1.tenor.com/m/tEpZqM3-TYcAAAAC/lancer-breakdance-lancer.gif";
           document.body.style.filter = "hue-rotate(45deg) brightness(1.4) contrast(1.2)";
           sub.innerHTML = "[[GERAÇÃO AUTOMÁTICA ATIVA]]";
       }
@@ -290,34 +288,14 @@
       document.getElementById('intro-screen').style.display = 'none';
       document.getElementById('game-screen').classList.add('active');
       
-      // Timer principal: conta segundos e aplica auto-click
       timerInterval = setInterval(() => { 
         secondsPlayed++; 
-        if(autoValue > 0) {
-            kromer += autoValue;
-        }
+        if(autoValue > 0) { kromer += autoValue; }
         updateDisplay(); 
       }, 1000);
     }
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key.toUpperCase() === 'Z') {
-        if (!gameStarted) startTheGame();
-        else if (!isKeyDown) { addKromer(); isKeyDown = true; }
-      }
-    });
-
-    document.addEventListener('keyup', (event) => {
-      if (event.key.toUpperCase() === 'Z') isKeyDown = false;
-    });
-
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('yt-player', {
-        height: '0', width: '0', videoId: musicId,
-        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': musicId }
-      });
-    }
+    // Removido o listener de teclado para focar no Mouse/Touch!
   </script>
 </body>
 </html>
