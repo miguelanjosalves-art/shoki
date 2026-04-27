@@ -2,8 +2,8 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DELTARUNE CLICKER - MOUSE & TOUCH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>DELTARUNE CLICKER - ENTER TO START</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -41,7 +41,7 @@
       width: 220px; height: auto; display: block;
       transition: transform 0.05s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
-      cursor: pointer; /* Agora mostra a mãozinha de clique */
+      cursor: pointer;
     }
     .ralsei-btn:active { transform: scale(0.9) !important; }
     
@@ -76,17 +76,18 @@
     @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
   </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
   <div id="yt-player" style="position: absolute; top: -1000px;"></div>
 
-  <div id="intro-screen" class="screen active" onclick="startTheGame()">
+  <div id="intro-screen" class="screen active">
     <div class="scene">
       <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
       <div style="text-align:center">
         <h1>DELTARUNE CLICKER</h1>
         <div class="heart">♥</div>
-        <div style="font-size: 1.5rem; color: #b19cd9;">Clique para Iniciar</div>
+        <div id="start-msg" style="font-size: 1.5rem; color: #b19cd9; animation: float 2s infinite;">Pressione [ENTER] para Iniciar</div>
+        <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">(Clique na tela uma vez antes para ativar o som)</div>
       </div>
       <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" class="character right-char">
     </div>
@@ -102,7 +103,7 @@
         <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()"></button>
     </div>
 
-    <div class="subtitle" id="game-sub" style="margin-top: 20px; font-size: 1.5rem;">CLIQUE NO RALSEI!</div>
+    <div class="subtitle" id="game-sub" style="margin-top: 20px; font-size: 1.5rem;">USE O MOUSE PARA CLICAR!</div>
 
     <div class="menu-buttons">
       <button class="btn-ui" onclick="saveGame()">SALVAR</button>
@@ -148,10 +149,8 @@
       if(!gameStarted) return;
       kromer += clickValue;
       updateDisplay();
-      
       clickSound.currentTime = 0;
       clickSound.play();
-
       const ralsei = document.getElementById('ralsei-img');
       ralsei.style.transform = "scale(1.1)";
       setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
@@ -163,7 +162,7 @@
       
       if (clickValue === 1 && kromer >= 50) {
           container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE]] - 50 <br> (+2 POR CLIQUE)";
+          btn.innerHTML = "[[UPGRADE]] - 50 <br> (+2 P/ CLIQUE)";
       } 
       else if (clickValue === 2 && kromer >= 200) {
           container.style.display = 'block';
@@ -171,7 +170,7 @@
       }
       else if (clickValue === 3 && kromer >= 500) {
           container.style.display = 'block';
-          btn.innerHTML = "[[NEO]] - 500 <br> (+5 POR CLIQUE)";
+          btn.innerHTML = "[[NEO]] - 500 <br> (+5 P/ CLIQUE)";
       } 
       else if (clickValue === 8 && kromer >= 1700 && !document.body.style.filter.includes("280deg")) {
           container.style.display = 'block';
@@ -179,11 +178,11 @@
       }
       else if (clickValue === 8 && kromer >= 3000 && clickValue < 12) {
           container.style.display = 'block';
-          btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 PONTOS POR CLIQUE)";
+          btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 P/ CLIQUE)";
       }
       else if (clickValue === 12 && kromer >= 5500 && clickValue < 24) {
           container.style.display = 'block';
-          btn.innerHTML = "[[BIGGER SHOT]] - 5500 <br> (24 PONTOS POR CLIQUE)";
+          btn.innerHTML = "[[BIGGER SHOT]] - 5500 <br> (24 P/ CLIQUE)";
       }
       else if (autoValue === 0 && kromer >= 6700) {
           container.style.display = 'block';
@@ -281,13 +280,18 @@
         }
     }
 
+    // LISTENER PARA O ENTER
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !gameStarted) {
+            startTheGame();
+        }
+    });
+
     function startTheGame() {
-      if(gameStarted) return;
       gameStarted = true;
       if (player && player.playVideo) player.playVideo();
       document.getElementById('intro-screen').style.display = 'none';
       document.getElementById('game-screen').classList.add('active');
-      
       timerInterval = setInterval(() => { 
         secondsPlayed++; 
         if(autoValue > 0) { kromer += autoValue; }
@@ -295,7 +299,13 @@
       }, 1000);
     }
 
-    // Removido o listener de teclado para focar no Mouse/Touch!
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('yt-player', {
+        height: '0', width: '0', videoId: musicId,
+        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': musicId }
+      });
+    }
   </script>
 </body>
 </html>
