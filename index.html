@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>DELTARUNE CLICKER - ENTER TO START</title>
+  <title>DELTARUNE CLICKER - BOSS MUSIC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -25,25 +25,22 @@
     }
     .screen.active { display: flex; }
 
-    .scene { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1400px; gap: 60px; }
-    .character { width: 160px; height: auto; filter: drop-shadow(0 0 15px rgba(255, 110, 240, 0.7)); animation: floatChar 6s ease-in-out infinite; }
-    .right-char { transform: scaleX(-1); }
-    
-    h1 {
-      font-family: 'Press Start 2P', cursive; font-size: 3rem; color: #fff8e8;
-      text-shadow: 0 0 12px #ff6ef0, 8px 8px 0 #000;
-      margin: 0 0 20px 0; animation: glitch 5s infinite; text-align: center;
-    }
-
-    .heart { font-size: 60px; margin: 10px auto; animation: float 5s ease-in-out infinite; color: #ff2d55; }
+    .game-area { position: relative; display: flex; align-items: center; justify-content: center; }
 
     .ralsei-btn {
       width: 220px; height: auto; display: block;
       transition: transform 0.05s;
       filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.4));
-      cursor: pointer;
+      cursor: pointer; z-index: 2;
     }
     .ralsei-btn:active { transform: scale(0.9) !important; }
+
+    #mini-spamton {
+      position: absolute; width: 60px; height: auto;
+      right: -70px; top: 50%; transform: translateY(-50%);
+      display: none; animation: float 1.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 8px yellow);
+    }
     
     #kromer-display {
       font-family: 'Press Start 2P', cursive; font-size: 3rem;
@@ -51,13 +48,12 @@
     }
 
     .timer-display { font-size: 1.5rem; color: #fff; margin-bottom: 20px; }
-
     #upgrade-container { margin-top: 10px; display: none; min-height: 80px; }
     
     .btn-upgrade {
       background: #000; color: #00ff00; border: 4px solid #fff;
       padding: 15px 30px; font-family: 'Press Start 2P', cursive;
-      font-size: 1.1rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
+      font-size: 1rem; cursor: pointer; box-shadow: 5px 5px 0 #00ff00;
     }
 
     .menu-buttons { position: absolute; bottom: 20px; display: flex; gap: 20px; }
@@ -66,14 +62,7 @@
       padding: 10px 20px; font-family: 'Press Start 2P', cursive; font-size: 0.8rem; cursor: pointer;
     }
 
-    #ranking-modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; flex-direction: column;
-    }
-
-    @keyframes glitch { 0%, 100% { transform: translate(0); } 2%, 4% { transform: translate(-3px, 3px); } }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-    @keyframes floatChar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @keyframes float { 0%, 100% { transform: translateY(-50%) scale(1); } 50% { transform: translateY(-75%) scale(1.1); } }
   </style>
 </head>
 <body>
@@ -81,15 +70,10 @@
   <div id="yt-player" style="position: absolute; top: -1000px;"></div>
 
   <div id="intro-screen" class="screen active">
-    <div class="scene">
-      <img src="https://media.tenor.com/osrwVQsq5NUAAAAi/kris-deltarune.gif" class="character">
-      <div style="text-align:center">
-        <h1>DELTARUNE CLICKER</h1>
-        <div class="heart">♥</div>
-        <div id="start-msg" style="font-size: 1.5rem; color: #b19cd9; animation: float 2s infinite;">Pressione [ENTER] para Iniciar</div>
-        <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">(Clique na tela uma vez antes para ativar o som)</div>
-      </div>
-      <img src="https://media.tenor.com/8qguU3aky9IAAAAj/susie-deltarune.gif" class="character right-char">
+    <div style="text-align:center">
+      <h1 style="font-family:'Press Start 2P'">DELTARUNE CLICKER</h1>
+      <div style="font-size: 1.5rem; color: #b19cd9;">Pressione [ENTER] para Iniciar</div>
+      <p style="font-size: 1rem;">(Clique na tela antes para ativar o áudio)</p>
     </div>
   </div>
 
@@ -97,25 +81,21 @@
     <div id="kromer-display">$ <span id="count">0</span></div>
     <div class="timer-display">TEMPO: <span id="timer">00:00</span></div>
     
-    <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" id="ralsei-img" class="ralsei-btn" onclick="addKromer()">
+    <div class="game-area">
+        <img src="https://media.tenor.com/uQaQC--pzp8AAAAi/ralsei-spin.gif" id="ralsei-img" class="ralsei-btn" onclick="addKromer()">
+        <img src="https://media.tenor.com/69pA_Y6S69UAAAAi/spamton-g-spamton-spamton.gif" id="mini-spamton">
+    </div>
          
     <div id="upgrade-container">
         <button id="upgrade-btn" class="btn-upgrade" onclick="buyUpgrade()"></button>
     </div>
 
-    <div class="subtitle" id="game-sub" style="margin-top: 20px; font-size: 1.5rem;">USE O MOUSE PARA CLICAR!</div>
+    <div class="subtitle" id="game-sub" style="margin-top: 20px; font-size: 1.5rem;">CLIQUE NO RALSEI!</div>
 
     <div class="menu-buttons">
       <button class="btn-ui" onclick="saveGame()">SALVAR</button>
-      <button class="btn-ui" onclick="toggleRanking()">RANKING</button>
       <button class="btn-ui" onclick="resetGame()" style="color: red; border-color: red;">RESET</button>
     </div>
-  </div>
-
-  <div id="ranking-modal">
-    <h2 style="font-family:'Press Start 2P'; color: yellow;">[[ RECORDES LOCAIS ]]</h2>
-    <div id="ranking-list" style="margin: 20px 0;"></div>
-    <button class="btn-ui" onclick="toggleRanking()">FECHAR</button>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
@@ -126,22 +106,21 @@
     let gameStarted = false;
     let secondsPlayed = 0;
     let timerInterval;
-    const musicId = "In3y0C7mQvA"; 
+    let bossPhase = false;
+
+    const musicIntro = "In3y0C7mQvA"; // Tema calmo
+    const musicBoss = "v_Uv6G-mC4I";   // BIG SHOT (Tema do Boss)
 
     const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-37.mp3');
     const upgradeSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
 
     window.onload = () => { loadGame(); };
 
-    function formatTime(s) {
-        const mins = Math.floor(s / 60);
-        const secs = s % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
     function updateDisplay() {
       document.getElementById('count').innerText = Math.floor(kromer);
-      document.getElementById('timer').innerText = formatTime(secondsPlayed);
+      const mins = Math.floor(secondsPlayed / 60);
+      const secs = secondsPlayed % 60;
+      document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
       checkUpgrades();
     }
 
@@ -151,97 +130,55 @@
       updateDisplay();
       clickSound.currentTime = 0;
       clickSound.play();
-      const ralsei = document.getElementById('ralsei-img');
-      ralsei.style.transform = "scale(1.1)";
-      setTimeout(() => { ralsei.style.transform = "scale(1)"; }, 50);
     }
 
     function checkUpgrades() {
       const container = document.getElementById('upgrade-container');
       const btn = document.getElementById('upgrade-btn');
       
-      if (clickValue === 1 && kromer >= 50) {
+      if (clickValue < 24 && kromer >= 50) {
           container.style.display = 'block';
-          btn.innerHTML = "[[UPGRADE]] - 50 <br> (+2 P/ CLIQUE)";
+          btn.innerHTML = "[[UPGRADE]] - 50";
       } 
-      else if (clickValue === 2 && kromer >= 200) {
+      else if (clickValue === 24 && autoValue === 0 && kromer >= 6700) {
           container.style.display = 'block';
-          btn.innerHTML = "[[SUPREMO]] - 200 <br> (GIRAR!)";
+          btn.innerHTML = "[[GERADOR]] - 6700";
       }
-      else if (clickValue === 3 && kromer >= 500) {
+      else if (!bossPhase && kromer >= 10000) {
           container.style.display = 'block';
-          btn.innerHTML = "[[NEO]] - 500 <br> (+5 P/ CLIQUE)";
-      } 
-      else if (clickValue === 8 && kromer >= 1700 && !document.body.style.filter.includes("280deg")) {
-          container.style.display = 'block';
-          btn.innerHTML = "[[ULTRA]] - 1700 <br> (8 PONTOS FIXOS)";
-      }
-      else if (clickValue === 8 && kromer >= 3000 && clickValue < 12) {
-          container.style.display = 'block';
-          btn.innerHTML = "[[HYPER-LINK]] - 3000 <br> (12 P/ CLIQUE)";
-      }
-      else if (clickValue === 12 && kromer >= 5500 && clickValue < 24) {
-          container.style.display = 'block';
-          btn.innerHTML = "[[BIGGER SHOT]] - 5500 <br> (24 P/ CLIQUE)";
-      }
-      else if (autoValue === 0 && kromer >= 6700) {
-          container.style.display = 'block';
-          btn.innerHTML = "[[GERADOR]] - 6700 <br> (+10 P/ SEGUNDO)";
+          btn.innerHTML = "[[BIG SHOT]] - 10000 <br> NOVA MÚSICA + PODER";
       }
       else { container.style.display = 'none'; }
     }
 
     function buyUpgrade() {
-      const ralseiImg = document.getElementById('ralsei-img');
-      const sub = document.getElementById('game-sub');
+      if (clickValue < 24 && kromer >= 50) {
+          kromer -= 50; clickValue = 24; upgradeSound.play();
+      }
+      else if (clickValue === 24 && autoValue === 0 && kromer >= 6700) {
+          kromer -= 6700; autoValue = 10; upgradeSound.play();
+      }
+      else if (kromer >= 10000 && !bossPhase) {
+          upgradeSound.play();
+          kromer -= 10000;
+          clickValue = 39;
+          bossPhase = true;
+          
+          // Troca de música
+          if (player && player.loadVideoById) {
+              player.loadVideoById(musicBoss);
+          }
 
-      if (clickValue === 1 && kromer >= 50) {
-          upgradeSound.play(); kromer -= 50; clickValue = 2;
-          sub.innerText = "BIG SHOT!";
-      } 
-      else if (clickValue === 2 && kromer >= 200) {
-          upgradeSound.play(); kromer -= 200; clickValue = 3;
-          ralseiImg.src = "https://media.tenor.com/pBhLGoicbhsAAAAi/ralsei-ralsei-spin.gif";
-          sub.innerText = "OLHA ELE GIRANDO!";
-      }
-      else if (clickValue === 3 && kromer >= 500) {
-          upgradeSound.play(); kromer -= 500; clickValue = 8;
-          document.body.style.filter = "hue-rotate(150deg)";
-          sub.innerText = "PODER NEO ATIVADO!";
-      }
-      else if (clickValue === 8 && kromer >= 1700 && kromer < 3000) {
-          upgradeSound.play(); kromer -= 1700;
-          document.body.style.filter = "hue-rotate(280deg) brightness(1.2)";
-          sub.innerHTML = "[[OTIMIZADO]]";
-      }
-      else if (clickValue === 8 && kromer >= 3000) {
-          upgradeSound.play(); kromer -= 3000; clickValue = 12;
-          ralseiImg.src = "https://media.tenor.com/ZIn_0w7V170AAAAi/ralsei-deltarune.gif";
-          document.body.style.filter = "contrast(1.5) brightness(1.1) sepia(0.3)";
-          sub.innerHTML = "[[PODER MÁXIMO CIBERNÉTICO]]";
-      }
-      else if (clickValue === 12 && kromer >= 5500) {
-          upgradeSound.play(); kromer -= 5500; clickValue = 24;
-          document.body.style.filter = "contrast(1.8) brightness(1.3) hue-rotate(320deg)";
-          sub.innerHTML = "[[STATUS: DIVINDADE]]";
-      }
-      else if (autoValue === 0 && kromer >= 6700) {
-          upgradeSound.play(); kromer -= 6700; autoValue = 10;
-          document.body.style.filter = "hue-rotate(45deg) brightness(1.4) contrast(1.2)";
-          sub.innerHTML = "[[GERAÇÃO AUTOMÁTICA ATIVA]]";
+          document.getElementById('mini-spamton').style.display = 'block';
+          document.body.style.filter = "contrast(1.4) hue-rotate(180deg)";
+          document.getElementById('game-sub').innerHTML = "[[BIG SHOT]] ATIVADO!";
       }
       updateDisplay();
     }
 
     function saveGame() {
-        const gameState = {
-            kromer: kromer, clickValue: clickValue, autoValue: autoValue, secondsPlayed: secondsPlayed,
-            ralseiImg: document.getElementById('ralsei-img').src,
-            filter: document.body.style.filter
-        };
-        localStorage.setItem('deltarune_save', JSON.stringify(gameState));
-        updateRanking(kromer, secondsPlayed);
-        alert("SAVE COMPLETO!");
+        localStorage.setItem('deltarune_save', JSON.stringify({ kromer, clickValue, autoValue, secondsPlayed, bossPhase }));
+        alert("GAME SALVO!");
     }
 
     function loadGame() {
@@ -251,59 +188,48 @@
             kromer = data.kromer; clickValue = data.clickValue; 
             autoValue = data.autoValue || 0;
             secondsPlayed = data.secondsPlayed;
-            document.getElementById('ralsei-img').src = data.ralseiImg;
-            document.body.style.filter = data.filter;
+            bossPhase = data.bossPhase || false;
+            if(bossPhase) {
+                document.getElementById('mini-spamton').style.display = 'block';
+                document.body.style.filter = "contrast(1.4) hue-rotate(180deg)";
+            }
             updateDisplay();
         }
     }
 
-    function resetGame() {
-        if(confirm("DELETAR TUDO?")) { localStorage.clear(); location.reload(); }
-    }
+    function resetGame() { if(confirm("RESETAR TUDO?")) { localStorage.clear(); location.reload(); } }
 
-    function updateRanking(score, time) {
-        let ranking = JSON.parse(localStorage.getItem('deltarune_ranking') || "[]");
-        ranking.push({ score, time, date: new Date().toLocaleDateString() });
-        ranking.sort((a, b) => b.score - a.score);
-        ranking = ranking.slice(0, 5);
-        localStorage.setItem('deltarune_ranking', JSON.stringify(ranking));
-    }
-
-    function toggleRanking() {
-        const modal = document.getElementById('ranking-modal');
-        const list = document.getElementById('ranking-list');
-        if (modal.style.display === 'flex') modal.style.display = 'none';
-        else {
-            let ranking = JSON.parse(localStorage.getItem('deltarune_ranking') || "[]");
-            list.innerHTML = ranking.map((item, i) => `<p>${i+1}º - $${item.score} | ${formatTime(item.time)}</p>`).join('');
-            modal.style.display = 'flex';
-        }
-    }
-
-    // LISTENER PARA O ENTER
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !gameStarted) {
-            startTheGame();
-        }
-    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !gameStarted) startTheGame(); });
 
     function startTheGame() {
       gameStarted = true;
-      if (player && player.playVideo) player.playVideo();
+      const targetId = bossPhase ? musicBoss : musicIntro;
+      if (player && player.loadVideoById) player.loadVideoById(targetId);
+      
       document.getElementById('intro-screen').style.display = 'none';
       document.getElementById('game-screen').classList.add('active');
+      
       timerInterval = setInterval(() => { 
         secondsPlayed++; 
         if(autoValue > 0) { kromer += autoValue; }
         updateDisplay(); 
       }, 1000);
+
+      // Mecânica de cliques automáticos 2x por segundo
+      setInterval(() => {
+        if(bossPhase) {
+            kromer += 2; // Simula 2 "clicks" extras
+            updateDisplay();
+        }
+      }, 500); 
     }
 
     let player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('yt-player', {
-        height: '0', width: '0', videoId: musicId,
-        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': musicId }
+        height: '0', width: '0',
+        videoId: musicIntro,
+        playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1 }
       });
     }
   </script>
